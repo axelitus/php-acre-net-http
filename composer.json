@@ -1,0 +1,27 @@
+{
+    "name": "axelitus/acre-net-http",
+    "description": "axelitus's Acre Net Http classes.",
+    "type": "library",
+    "keywords": ["net", "network", "http", "protocol", "request", "response", "user-agent"],
+    "homepage": "http://axelitus.mx/acre",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Axel Pardemann",
+            "email": "dev@axelitus.mx",
+            "homepage": "http://axelitus.mx",
+            "role": "Lead Developer"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.0",
+
+        "axelitus/acre-common": "dev-develop"
+    },
+    "autoload": {
+        "psr-0": {
+            "axelitus\\Acre\\Net\\Http": "classes/"
+        }
+    }
+}
