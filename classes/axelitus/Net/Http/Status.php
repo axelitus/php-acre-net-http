@@ -15,7 +15,7 @@ namespace axelitus\Acre\Net\Http;
 /**
  * Status Class
  *
- * @see     http://www.ietf.org/rfc/rfc2616.txt     IETF RFC2616 Hypertext Transfer Protocol -- HTTP/1.1 (Sections 6.1.1 and 10)
+ * @see         http://www.ietf.org/rfc/rfc2616.txt     IETF RFC2616 Hypertext Transfer Protocol -- HTTP/1.1 (Sections 6.1.1 and 10)
  * @package     axelitus\Acre\Net\Http
  * @category    Net\Http
  * @author      Axel Pardemann (dev@axelitus.mx)
@@ -25,14 +25,15 @@ class Status
     // Informational - Request received, continuing process.
 
     /**
-     * @var int     Continue
+     * @var int     Continue    As continue is a reserved word an underscore was added to each constant to prefix them
+     *                          and remain consistent.
      **/
-    const CONTINUE = 100;
+    const __CONTINUE = 100;
 
     /**
      * @var int     Switching Protocols
      **/
-    const SWITCHING_PROTOCOLS = 101;
+    const _SWITCHING_PROTOCOLS = 101;
 
 
     // Success - The action was successfully received, understood, and accepted.
@@ -40,37 +41,37 @@ class Status
     /**
      * @var int     OK
      **/
-    const OK = 200;
+    const _OK = 200;
     
     /**
      * @var int     Created
      **/
-    const CREATED = 201;
+    const _CREATED = 201;
     
     /**
      * @var int     Accepted
      **/
-    const ACCEPTED = 202;
+    const _ACCEPTED = 202;
     
     /**
      * @var int     Non-Authoritative Information
      **/
-    const NON_AUTHORITATIVE_INFORMATION = 203;
+    const _NON_AUTHORITATIVE_INFORMATION = 203;
     
     /**
      * @var int     No Content
      **/
-    const NO_CONTENT = 204;
+    const _NO_CONTENT = 204;
     
     /**
      * @var int     Reset Content
      **/
-    const RESET_CONTENT = 205;
+    const _RESET_CONTENT = 205;
     
     /**
      * @var int     Partial Content
      **/
-    const PARTIAL_CONTENT = 206;
+    const _PARTIAL_CONTENT = 206;
 
 
     // Redirection - Further action must be taken in order to complete the request.
@@ -78,37 +79,37 @@ class Status
     /**
      * @var int     Multiple Choices
      **/
-    const MULTIPLE_CHOICES = 300;,
+    const _MULTIPLE_CHOICES = 300;
     
     /**
      * @var int     Moved Permanently
      **/
-    const MOVED_PERMANENTLY = 301;,
+    const _MOVED_PERMANENTLY = 301;
     
     /**
      * @var int     Found
      **/
-    const FOUND = 302;,
+    const _FOUND = 302;
     
     /**
      * @var int     See Other
      **/
-    const SEE_OTHER = 303;,
+    const _SEE_OTHER = 303;
     
     /**
      * @var int     Not Modified
      **/
-    const NOT_MODIFIED = 304;,
+    const _NOT_MODIFIED = 304;
     
     /**
      * @var int     Use Proxy
      **/
-    const USE_PROXY = 305;,
+    const _USE_PROXY = 305;
     
     /**
      * @var int     Temporary Redirect
      **/
-    const TEMPORARY_REDIRECT = 307;,
+    const _TEMPORARY_REDIRECT = 307;
 
 
     // Client Error - The request contains bad syntax or cannot be fulfilled
@@ -116,92 +117,92 @@ class Status
     /**
      * @var int     Bad Request
      **/
-    const BAD_REQUEST = 400;,
+    const _BAD_REQUEST = 400;
     
     /**
      * @var int     Unauthorized
      **/
-    const UNAUTHORIZED = 401;,
+    const _UNAUTHORIZED = 401;
     
     /**
      * @var int     Payment Required
      **/
-    const PAYMENT_REQUIRED = 402;,
+    const _PAYMENT_REQUIRED = 402;
     
     /**
      * @var int     Forbidden
      **/
-    const FORBIDDEN = 403;,
+    const _FORBIDDEN = 403;
     
     /**
      * @var int     Not Found
      **/
-    const NOT_FOUND = 404;,
+    const _NOT_FOUND = 404;
     
     /**
      * @var int     Method Not Allowed
      **/
-    const METHOD_NOT_ALLOWED = 405;,
+    const _METHOD_NOT_ALLOWED = 405;
     
     /**
      * @var int     Not Acceptable
      **/
-    const NOT_ACCEPTABLE = 406;,
+    const _NOT_ACCEPTABLE = 406;
     
     /**
      * @var int     Proxy Authentication Required
      **/
-    const PROXY_AUTHENTICATION_REQUIRED = 407;,
+    const _PROXY_AUTHENTICATION_REQUIRED = 407;
     
     /**
      * @var int     Request Time-out
      **/
-    const REQUEST_TIME_OUT = 408;,
+    const _REQUEST_TIME_OUT = 408;
     
     /**
      * @var int     Conflict
      **/
-    const CONFLICT = 409;,
+    const _CONFLICT = 409;
     
     /**
      * @var int     Gone
      **/
-    const GONE = 410;,
+    const _GONE = 410;
     
     /**
      * @var int     Length Required
      **/
-    const LENGTH_REQUIRED = 411;,
+    const _LENGTH_REQUIRED = 411;
     
     /**
      * @var int     Precondition Failed
      **/
-    const PRECONDITION_FAILED = 412;,
+    const _PRECONDITION_FAILED = 412;
     
     /**
      * @var int     Request Entity Too Large
      **/
-    const REQUEST_ENTITY_TOO_LARGE = 413;,
+    const _REQUEST_ENTITY_TOO_LARGE = 413;
     
     /**
      * @var int     Request-URI Too Large
      **/
-    const REQUEST_URI_TOO_LARGE = 414;,
+    const _REQUEST_URI_TOO_LARGE = 414;
     
     /**
      * @var int     Unsupported Media Type
      **/
-    const UNSUPPORTED_MEDIA_TYPE = 415;,
+    const _UNSUPPORTED_MEDIA_TYPE = 415;
     
     /**
      * @var int     Requested range not satisfiable
      **/
-    const REQUESTED_RANGE_NOT_SATISFIABLE = 416;,
+    const _REQUESTED_RANGE_NOT_SATISFIABLE = 416;
     
     /**
      * @var int     Expectation Failed
      **/
-    const EXPECTATION_FAILED = 417;,
+    const _EXPECTATION_FAILED = 417;
 
 
     // Server Error - The server failed to fulfill an apparently valid request
@@ -209,32 +210,32 @@ class Status
     /**
      * @var int     Internal Server Error
      **/
-    const INTERNAL_SERVER_ERROR = 500;,
+    const _INTERNAL_SERVER_ERROR = 500;
     
     /**
      * @var int     Not Implemented
      **/
-    const NOT_IMPLEMENTED = 501;,
+    const _NOT_IMPLEMENTED = 501;
     
     /**
      * @var int     Bad Gateway
      **/
-    const BAD_GATEWAY = 502;,
+    const _BAD_GATEWAY = 502;
     
     /**
      * @var int     Service Unavailable
      **/
-    const SERVICE_UNAVAILABLE = 503;,
+    const _SERVICE_UNAVAILABLE = 503;
     
     /**
      * @var int     Gateway Time-out
      **/
-    const GATEWAY_TIME_OUT = 504;,
+    const _GATEWAY_TIME_OUT = 504;
     
     /**
      * @var int     HTTP Version not supported
      **/
-    const HTTP_VERSION_NOT_SUPPORTED = 505;
+    const _HTTP_VERSION_NOT_SUPPORTED = 505;
 
     /**
      * @var array   Contains all HTTP/1.1 status codes with their Reason-Phrases.
