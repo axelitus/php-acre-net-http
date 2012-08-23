@@ -35,6 +35,11 @@ class Status
      **/
     const _SWITCHING_PROTOCOLS = 101;
 
+    /**
+     * @var int     Processing
+     */
+    const _PROCESSING = 102;    // *
+
 
     // Success - The action was successfully received, understood, and accepted.
     
@@ -73,6 +78,20 @@ class Status
      **/
     const _PARTIAL_CONTENT = 206;
 
+    /**
+     * @var int     Multi-Status
+     */
+    const _MULTI_STATUS = 207;      // *
+
+    /**
+     * @var int     Already Reported
+     */
+    const _ALREADY_REPORTED = 208;      // *
+
+    /**
+     * @var int     IM Used
+     */
+    const _IM_USED = 226;           // *
 
     // Redirection - Further action must be taken in order to complete the request.
     
@@ -110,6 +129,11 @@ class Status
      * @var int     Temporary Redirect
      **/
     const _TEMPORARY_REDIRECT = 307;
+
+    /**
+     * @var int     Permanent Redirect
+     */
+    const _PERMANENT_REDIRECT = 308;       // *
 
 
     // Client Error - The request contains bad syntax or cannot be fulfilled
@@ -204,6 +228,51 @@ class Status
      **/
     const _EXPECTATION_FAILED = 417;
 
+    /**
+     * @var int     I'm a celestial teapot
+     */
+    const _IM_A_CELESTIAL_TEAPOT = 418;         // *
+
+    /**
+     * @var int     Unprocessable Entity
+     */
+    const _UNPROCESSABLE_ENTITY = 422;          // *
+
+    /**
+     * @var int     Locked
+     */
+    const _LOCKED = 423;            // *
+
+    /**
+     * @var int     Failed Dependency
+     */
+    const _FAILED_DEPENDENCY = 424;          // *
+
+    /**
+     * @var int     Reserved for WebDAV advanced collections expired proposal
+     */
+    const _RESERVED_FOR_WEBDAV_ADVANCED_COLLECTIONS_EXPIRED_PROPOSAL = 425;     // *
+
+    /**
+     * @var int     Upgrade Required
+     */
+    const _UPGRADE_REQUIRED = 426;          // *
+
+    /**
+     * @var int     Precondition Required
+     */
+    const _PRECONDITION_REQUIRED = 428;      // *
+
+    /**
+     * @var int     Too Many Requests
+     */
+    const _TOO_MANY_REQUESTS = 429;          // *
+
+    /**
+     * @var int     Request Header Fields Too Large
+     */
+    const _REQUEST_HEADERS_FIELDS_TOO_LARGE = 431;       // *
+
 
     // Server Error - The server failed to fulfill an apparently valid request
     
@@ -238,12 +307,38 @@ class Status
     const _HTTP_VERSION_NOT_SUPPORTED = 505;
 
     /**
+     * @var int     Variant Also Negotiates (Experimental)
+     */
+    const _VARIANT_ALSO_NEGOTIATES_EXPERIMENTAL = 506;      // *
+
+    /**
+     * @var int     Insufficient Storage
+     */
+    const _INSUFFICIENT_STORAGE = 507;          // *
+
+    /**
+     * @var int     Loop Detected
+     */
+    const _LOOP_DETECTED = 508;         // *
+
+    /**
+     * @var int     Not Extended
+     */
+    const _NOT_EXTENDED = 510;          // *
+
+    /**
+     * @var int     Network Authentication Required
+     */
+    const _NETWORK_AUTHENTICATION_REQUIRED = 511;       // *
+
+    /**
      * @var array   Contains all HTTP/1.1 status codes with their Reason-Phrases.
      **/
-    private $_codes = array(
+    private static $_codes = array(
         // Informational - Request received, continuing process.
         100 => 'Continue',
         101 => 'Switching Protocols',
+        102 => 'Processing',
 
         // Success - The action was successfully received, understood, and accepted.
         200 => 'OK',
@@ -253,6 +348,9 @@ class Status
         204 => 'No Content',
         205 => 'Reset Content',
         206 => 'Partial Content',
+        207 => 'Multi-Status',
+        208 => 'Already Reported',
+        226 => 'IM Used',
 
         // Redirection - Further action must be taken in order to complete the request.
         300 => 'Multiple Choices',
@@ -262,6 +360,7 @@ class Status
         304 => 'Not Modified',
         305 => 'Use Proxy',
         307 => 'Temporary Redirect',
+        308 => 'Permanent Redirect',
 
         // Client Error - The request contains bad syntax or cannot be fulfilled
         400 => 'Bad Request',
@@ -282,6 +381,15 @@ class Status
         415 => 'Unsupported Media Type',
         416 => 'Requested range not satisfiable',
         417 => 'Expectation Failed',
+        418 => 'I\'m a celestial teapot',
+        422 => 'Unprocessable Entity',
+        423 => 'Locked',
+        424 => 'Failed Dependency',
+        425 => 'Reserved for WebDAV advanced collections expired proposal',
+        426 => 'Upgrade Required',
+        428 => 'Precondition Required',
+        429 => 'Too Many Requests',
+        431 => 'Request Header Fields Too Large',
 
         // Server Error - The server failed to fulfill an apparently valid request
         500 => 'Internal Server Error',
@@ -289,6 +397,16 @@ class Status
         502 => 'Bad Gateway',
         503 => 'Service Unavailable',
         504 => 'Gateway Time-out',
-        505 => 'HTTP Version not supported'
+        505 => 'HTTP Version not supported',
+        506 => 'Variant Also Negotiates (Experimental)',
+        507 => 'Insufficient Storage',
+        508 => 'Loop Detected',
+        510 => 'Not Extended',
+        511 => 'Network Authentication Required'
     );
+
+    public static function isValid($status)
+    {
+        return array_key_exists($status, static::$_codes);
+    }
 }
