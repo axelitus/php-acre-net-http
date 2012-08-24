@@ -17,7 +17,8 @@
     "require": {
         "php": ">=5.3.0",
 
-        "axelitus/acre-common": "dev-develop"
+        "axelitus/acre-common": "dev-develop",
+        "axelitus/acre-net-uri": "dev-develop"
     },
     "autoload": {
         "psr-0": {

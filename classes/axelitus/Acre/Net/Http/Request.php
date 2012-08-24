@@ -12,6 +12,14 @@
 
 namespace axelitus\Acre\Net\Http;
 
+use InvalidArgumentException;
+use axelitus\Acre\Net\Http\Method as Method;
+
+/**
+ * Requires axelitus\Acre\Net\Uri package
+ */
+use axelitus\Acre\Net\Uri\Uri as Uri;
+
 /**
  * Request Class
  *
@@ -21,4 +29,41 @@ namespace axelitus\Acre\Net\Http;
  */
 class Request
 {
+    protected $_method = Method::GET;
+    protected $_uri = null;
+
+    protected function setMethod($method)
+    {
+        if (!Method::isValid($method)) {
+            throw new InvalidArgumentException("{$method} is not a valid HTTP method.");
+        }
+
+        $this->_method = $method;
+
+        return $this;
+    }
+
+    protected function getMethod()
+    {
+        return $this->_method;
+    }
+
+    protected function setUri(Uri $uri)
+    {
+        $this->_uri = $uri;
+
+        return $this;
+    }
+
+    protected function getUri()
+    {
+        return $this->_uri;
+    }
+
+    protected function startLine()
+    {
+        $startLine = sprintf("%s %s HTTP/%s\r\n", $this->_method, $this->_uri, $this->_version);
+
+        return $startLine;
+    }
 }
