@@ -12,10 +12,11 @@
 
 namespace axelitus\Acre\Net\Http;
 
+use InvalidArgumentException;
+
 /**
  * Requires axelitus\Acre\Common package
  */
-use InvalidArgumentException;
 use axelitus\Acre\Net\Http\Status as Status;
 
 /**

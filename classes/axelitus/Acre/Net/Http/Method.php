@@ -13,6 +13,11 @@
 namespace axelitus\Acre\Net\Http;
 
 /**
+ * Requires axelitus\Acre\Common package
+ */
+use axelitus\Acre\Common\Str as Str;
+
+/**
  * Method Class
  *
  * @see         http://www.ietf.org/rfc/rfc2616.txt     IETF RFC2616 Hypertext Transfer Protocol -- HTTP/1.1 (Sections 5.1.1 and 9)
@@ -60,5 +65,13 @@ class Method
     /**
      * @var string  This specification reserves the method name CONNECT for use with a proxy that can dynamically switch to being a tunnel.
      **/
-    const CONNECT = 'CONNECT'; //
+    const CONNECT = 'CONNECT';
+
+    public static function isValid($method)
+    {
+        $methods = array(static::GET, static::CONNECT, static::DELETE, static::HEAD, static::OPTIONS, static::POST,
+                         static::PUT, static::TRACE);
+
+        return Str::isOneOf($method, $methods);
+    }
 }
