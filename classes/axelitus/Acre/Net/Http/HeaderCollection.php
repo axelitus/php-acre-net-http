@@ -18,8 +18,15 @@ use Iterator;
 use ArrayAccess;
 
 /**
+ * Requires axelitus\Acre\Common package
+ */
+use axelitus\Acre\Common\Str as Str;
+
+/**
  * HeaderCollection Class
  *
+ * @see         http://www.ietf.org/rfc/rfc2616.txt     IETF RFC2616 Hypertext Transfer Protocol -- HTTP/1.1
+ * @see         http://en.wikipedia.org/wiki/List_of_HTTP_header_fields     List of HTTP header fields
  * @package     axelitus\Acre\Net\Http
  * @category    Net\Http
  * @author      Axel Pardemann (dev@axelitus.mx)
@@ -39,9 +46,21 @@ class HeaderCollection implements Iterator, ArrayAccess
         }
     }
 
+    public function __set($header, $value)
+    {
+        $header = Str::separated($header, 'ucfirst', '-');
+        $this->setHeader($header, $value);
+    }
+
+    public function __get($header)
+    {
+        $header = Str::separated($header, 'ucfirst', '-');
+        return $this->getHeader($header);
+    }
+
     public function setHeader($header, $value, $append = false)
     {
-        $value = static::cleanNulls($value);
+        $value = static::nullToString($value);
         if (!$append or !array_key_exists($header, $this->_headers)) {
             $this->_headers[$header] = is_array($value) ? array_values($value) : array($value);
         } else {
@@ -63,8 +82,8 @@ class HeaderCollection implements Iterator, ArrayAccess
 
     public function removeHeader($header, $index = null)
     {
-        if ($index == null) {
-            unset($this->_headers[$index]);
+        if ($index === null or count($this->_headers[$header]) == 0) {
+            unset($this->_headers[$header]);
         } elseif (is_numeric($index) and array_key_exists($header, $this->_headers)) {
             if (!array_key_exists($index, $this->_headers[$header])) {
                 throw new OutOfBoundsException("The \$index value {$index} does not exists.");
@@ -75,13 +94,13 @@ class HeaderCollection implements Iterator, ArrayAccess
         }
     }
 
-    protected static function cleanNulls($value)
+    protected static function nullToString($value)
     {
-        if ($value == null) {
+        if ($value === null) {
             return '';
         } elseif (is_array($value)) {
             foreach ($value as &$item) {
-                $item = static::cleanNulls($item);
+                $item = static::nullToString($item);
             }
         }
 
@@ -114,14 +133,17 @@ class HeaderCollection implements Iterator, ArrayAccess
 
     public function rewind()
     {
-        $header = rewind($this->_headers);
+        $header = reset($this->_headers);
         return static::flattenHeader($header);
     }
 
     public function valid()
     {
-        $header = valid($this->_headers);
-        return static::flattenHeader($header);
+        if (empty($this->_headers) or current($this->_headers) === false) {
+            return false;
+        }
+
+        return true;
     }
 
     //</editor-fold>
