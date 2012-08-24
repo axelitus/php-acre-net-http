@@ -12,6 +12,8 @@
 
 namespace axelitus\Acre\Net\Http;
 
+use OutOfBoundsException;
+
 /**
  * Status Class
  *
@@ -38,41 +40,41 @@ class Status
     /**
      * @var int     Processing
      */
-    const _PROCESSING = 102;    // *
+    const _PROCESSING = 102; // *
 
 
     // Success - The action was successfully received, understood, and accepted.
-    
+
     /**
      * @var int     OK
      **/
     const _OK = 200;
-    
+
     /**
      * @var int     Created
      **/
     const _CREATED = 201;
-    
+
     /**
      * @var int     Accepted
      **/
     const _ACCEPTED = 202;
-    
+
     /**
      * @var int     Non-Authoritative Information
      **/
     const _NON_AUTHORITATIVE_INFORMATION = 203;
-    
+
     /**
      * @var int     No Content
      **/
     const _NO_CONTENT = 204;
-    
+
     /**
      * @var int     Reset Content
      **/
     const _RESET_CONTENT = 205;
-    
+
     /**
      * @var int     Partial Content
      **/
@@ -81,50 +83,50 @@ class Status
     /**
      * @var int     Multi-Status
      */
-    const _MULTI_STATUS = 207;      // *
+    const _MULTI_STATUS = 207; // *
 
     /**
      * @var int     Already Reported
      */
-    const _ALREADY_REPORTED = 208;      // *
+    const _ALREADY_REPORTED = 208; // *
 
     /**
      * @var int     IM Used
      */
-    const _IM_USED = 226;           // *
+    const _IM_USED = 226; // *
 
     // Redirection - Further action must be taken in order to complete the request.
-    
+
     /**
      * @var int     Multiple Choices
      **/
     const _MULTIPLE_CHOICES = 300;
-    
+
     /**
      * @var int     Moved Permanently
      **/
     const _MOVED_PERMANENTLY = 301;
-    
+
     /**
      * @var int     Found
      **/
     const _FOUND = 302;
-    
+
     /**
      * @var int     See Other
      **/
     const _SEE_OTHER = 303;
-    
+
     /**
      * @var int     Not Modified
      **/
     const _NOT_MODIFIED = 304;
-    
+
     /**
      * @var int     Use Proxy
      **/
     const _USE_PROXY = 305;
-    
+
     /**
      * @var int     Temporary Redirect
      **/
@@ -133,96 +135,96 @@ class Status
     /**
      * @var int     Permanent Redirect
      */
-    const _PERMANENT_REDIRECT = 308;       // *
+    const _PERMANENT_REDIRECT = 308; // *
 
 
     // Client Error - The request contains bad syntax or cannot be fulfilled
-    
+
     /**
      * @var int     Bad Request
      **/
     const _BAD_REQUEST = 400;
-    
+
     /**
      * @var int     Unauthorized
      **/
     const _UNAUTHORIZED = 401;
-    
+
     /**
      * @var int     Payment Required
      **/
     const _PAYMENT_REQUIRED = 402;
-    
+
     /**
      * @var int     Forbidden
      **/
     const _FORBIDDEN = 403;
-    
+
     /**
      * @var int     Not Found
      **/
     const _NOT_FOUND = 404;
-    
+
     /**
      * @var int     Method Not Allowed
      **/
     const _METHOD_NOT_ALLOWED = 405;
-    
+
     /**
      * @var int     Not Acceptable
      **/
     const _NOT_ACCEPTABLE = 406;
-    
+
     /**
      * @var int     Proxy Authentication Required
      **/
     const _PROXY_AUTHENTICATION_REQUIRED = 407;
-    
+
     /**
      * @var int     Request Time-out
      **/
     const _REQUEST_TIME_OUT = 408;
-    
+
     /**
      * @var int     Conflict
      **/
     const _CONFLICT = 409;
-    
+
     /**
      * @var int     Gone
      **/
     const _GONE = 410;
-    
+
     /**
      * @var int     Length Required
      **/
     const _LENGTH_REQUIRED = 411;
-    
+
     /**
      * @var int     Precondition Failed
      **/
     const _PRECONDITION_FAILED = 412;
-    
+
     /**
      * @var int     Request Entity Too Large
      **/
     const _REQUEST_ENTITY_TOO_LARGE = 413;
-    
+
     /**
      * @var int     Request-URI Too Large
      **/
     const _REQUEST_URI_TOO_LARGE = 414;
-    
+
     /**
      * @var int     Unsupported Media Type
      **/
     const _UNSUPPORTED_MEDIA_TYPE = 415;
-    
+
     /**
      * @var int     Requested range not satisfiable
      **/
     const _REQUESTED_RANGE_NOT_SATISFIABLE = 416;
-    
+
     /**
      * @var int     Expectation Failed
      **/
@@ -231,76 +233,76 @@ class Status
     /**
      * @var int     I'm a celestial teapot
      */
-    const _IM_A_CELESTIAL_TEAPOT = 418;         // *
+    const _IM_A_CELESTIAL_TEAPOT = 418; // *
 
     /**
      * @var int     Unprocessable Entity
      */
-    const _UNPROCESSABLE_ENTITY = 422;          // *
+    const _UNPROCESSABLE_ENTITY = 422; // *
 
     /**
      * @var int     Locked
      */
-    const _LOCKED = 423;            // *
+    const _LOCKED = 423; // *
 
     /**
      * @var int     Failed Dependency
      */
-    const _FAILED_DEPENDENCY = 424;          // *
+    const _FAILED_DEPENDENCY = 424; // *
 
     /**
      * @var int     Reserved for WebDAV advanced collections expired proposal
      */
-    const _RESERVED_FOR_WEBDAV_ADVANCED_COLLECTIONS_EXPIRED_PROPOSAL = 425;     // *
+    const _RESERVED_FOR_WEBDAV_ADVANCED_COLLECTIONS_EXPIRED_PROPOSAL = 425; // *
 
     /**
      * @var int     Upgrade Required
      */
-    const _UPGRADE_REQUIRED = 426;          // *
+    const _UPGRADE_REQUIRED = 426; // *
 
     /**
      * @var int     Precondition Required
      */
-    const _PRECONDITION_REQUIRED = 428;      // *
+    const _PRECONDITION_REQUIRED = 428; // *
 
     /**
      * @var int     Too Many Requests
      */
-    const _TOO_MANY_REQUESTS = 429;          // *
+    const _TOO_MANY_REQUESTS = 429; // *
 
     /**
      * @var int     Request Header Fields Too Large
      */
-    const _REQUEST_HEADERS_FIELDS_TOO_LARGE = 431;       // *
+    const _REQUEST_HEADERS_FIELDS_TOO_LARGE = 431; // *
 
 
     // Server Error - The server failed to fulfill an apparently valid request
-    
+
     /**
      * @var int     Internal Server Error
      **/
     const _INTERNAL_SERVER_ERROR = 500;
-    
+
     /**
      * @var int     Not Implemented
      **/
     const _NOT_IMPLEMENTED = 501;
-    
+
     /**
      * @var int     Bad Gateway
      **/
     const _BAD_GATEWAY = 502;
-    
+
     /**
      * @var int     Service Unavailable
      **/
     const _SERVICE_UNAVAILABLE = 503;
-    
+
     /**
      * @var int     Gateway Time-out
      **/
     const _GATEWAY_TIME_OUT = 504;
-    
+
     /**
      * @var int     HTTP Version not supported
      **/
@@ -309,27 +311,27 @@ class Status
     /**
      * @var int     Variant Also Negotiates (Experimental)
      */
-    const _VARIANT_ALSO_NEGOTIATES_EXPERIMENTAL = 506;      // *
+    const _VARIANT_ALSO_NEGOTIATES_EXPERIMENTAL = 506; // *
 
     /**
      * @var int     Insufficient Storage
      */
-    const _INSUFFICIENT_STORAGE = 507;          // *
+    const _INSUFFICIENT_STORAGE = 507; // *
 
     /**
      * @var int     Loop Detected
      */
-    const _LOOP_DETECTED = 508;         // *
+    const _LOOP_DETECTED = 508; // *
 
     /**
      * @var int     Not Extended
      */
-    const _NOT_EXTENDED = 510;          // *
+    const _NOT_EXTENDED = 510; // *
 
     /**
      * @var int     Network Authentication Required
      */
-    const _NETWORK_AUTHENTICATION_REQUIRED = 511;       // *
+    const _NETWORK_AUTHENTICATION_REQUIRED = 511; // *
 
     /**
      * @var array   Contains all HTTP/1.1 status codes with their Reason-Phrases.
@@ -404,6 +406,15 @@ class Status
         510 => 'Not Extended',
         511 => 'Network Authentication Required'
     );
+
+    public static function phrase($status, $prefixStatus = false)
+    {
+        if (!array_key_exists($status, static::$_codes)) {
+            throw new OutOfBoundsException("The status code {$status} does not exist.");
+        }
+
+        return (($prefixStatus) ? $status.' ' : '').static::$_codes[$status];
+    }
 
     public static function isValid($status)
     {
