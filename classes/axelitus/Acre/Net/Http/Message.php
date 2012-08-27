@@ -32,15 +32,31 @@ use InvalidArgumentException;
  */
 abstract class Message extends MagicObject
 {
+    /**
+     * @var string  The HTTP protocol version (1.0 or 1.1) of the message
+     */
     protected $_version = '1.1';
+
+    /**
+     * @var HeaderCollection    The message headers
+     */
     protected $_headers = null;
+
+    /**
+     * @var string      The body (contents) of the message
+     */
     protected $_body = '';
 
-    protected function __construct($options)
+    /**
+     * Protected constructor to prevent instantiation outside this class.
+     *
+     * @param array  $options   An array containing the initial message options
+     */
+    protected function __construct(array $options)
     {
         $options['headers'] = !isset($options['headers']) ? array() : $options['headers'];
         if (!$options['headers'] instanceof HeaderCollection) {
-            $options['headers'] = is_array($options['headers']) ? new HeaderCollection($options['headers'])
+            $options['headers'] = is_array($options['headers']) ? HeaderCollection::forge($options['headers'])
                 : new HeaderCollection();
         }
 
@@ -49,6 +65,14 @@ abstract class Message extends MagicObject
         }
     }
 
+    /**
+     * Forges a new Message instance. This forges an instance of each derived type class correctly.
+     *
+     * @static
+     * @param null|string|array $options    The message options or the body contents as a string
+     * @return Message
+     * @throws \InvalidArgumentException
+     */
     public static function forge($options = null)
     {
         $options = ($options === null) ? array() : $options;
@@ -61,6 +85,12 @@ abstract class Message extends MagicObject
         }
     }
 
+    /**
+     * Version setter.
+     *
+     * @param string $version   The protocol version
+     * @return Message      This instance for chaining
+     */
     protected function setVersion($version)
     {
         $this->_version = $version;
@@ -68,23 +98,45 @@ abstract class Message extends MagicObject
         return $this;
     }
 
+    /**
+     * Version getter.
+     *
+     * @return string   The protocol version
+     */
     protected function getVersion()
     {
         return $this->_version;
     }
 
+    /**
+     * Headers setter.
+     *
+     * @param HeaderCollection $headers     The message headers
+     * @return Message      This instance for chaining
+     */
     protected function setHeaders(HeaderCollection $headers)
     {
-        $this->_headers = $headers;
+        $this->_headers = ($headers === null)? HeaderCollection::forge() : $headers;
 
         return $this;
     }
 
+    /**
+     * Headers getter.
+     *
+     * @return HeaderCollection
+     */
     protected function getHeaders()
     {
         return $this->_headers;
     }
 
+    /**
+     * Body setter.
+     *
+     * @param string    $body       The message contents body
+     * @return Message      This instance for chaining
+     */
     protected function setBody($body)
     {
         $this->_body = $body;
@@ -92,11 +144,22 @@ abstract class Message extends MagicObject
         return $this;
     }
 
+    /**
+     * Body getter.
+     *
+     * @return string       The message's contents body
+     */
     protected function getBody()
     {
         return $this->_body;
     }
 
+    /**
+     * Calculates the contents body length.
+     *
+     * @param bool $setHeader   Whether to set the header in the message
+     * @return int      The contents body length
+     */
     public function getBodyLength($setHeader = false)
     {
         $length = Str::length($this->_body);
@@ -108,8 +171,19 @@ abstract class Message extends MagicObject
         return $length;
     }
 
+    /**
+     * The Message start line. This differs for Response and Request messages.
+     *
+     * @abstract
+     * @return string
+     */
     protected abstract function startLine();
 
+    /**
+     * The toString magic function to get a string representation of the object.
+     *
+     * @return string   The string representation of this object
+     */
     public function __toString()
     {
         $message = $this->startLine();
