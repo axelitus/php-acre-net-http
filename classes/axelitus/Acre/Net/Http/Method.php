@@ -67,6 +67,13 @@ class Method
      **/
     const CONNECT = 'CONNECT';
 
+    /**
+     * Determines if the given method is valid.
+     *
+     * @static
+     * @param string    $method     The method to test for validity
+     * @return bool     Whether the method is valid
+     */
     public static function isValid($method)
     {
         $methods = array(static::GET, static::CONNECT, static::DELETE, static::HEAD, static::OPTIONS, static::POST,

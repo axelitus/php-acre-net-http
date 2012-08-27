@@ -40,7 +40,7 @@ class Status
     /**
      * @var int     Processing
      */
-    const _PROCESSING = 102; // *
+    const _PROCESSING = 102;
 
 
     // Success - The action was successfully received, understood, and accepted.
@@ -83,17 +83,17 @@ class Status
     /**
      * @var int     Multi-Status
      */
-    const _MULTI_STATUS = 207; // *
+    const _MULTI_STATUS = 207;
 
     /**
      * @var int     Already Reported
      */
-    const _ALREADY_REPORTED = 208; // *
+    const _ALREADY_REPORTED = 208;
 
     /**
      * @var int     IM Used
      */
-    const _IM_USED = 226; // *
+    const _IM_USED = 226;
 
     // Redirection - Further action must be taken in order to complete the request.
 
@@ -135,7 +135,7 @@ class Status
     /**
      * @var int     Permanent Redirect
      */
-    const _PERMANENT_REDIRECT = 308; // *
+    const _PERMANENT_REDIRECT = 308;
 
 
     // Client Error - The request contains bad syntax or cannot be fulfilled
@@ -233,47 +233,47 @@ class Status
     /**
      * @var int     I'm a celestial teapot
      */
-    const _IM_A_CELESTIAL_TEAPOT = 418; // *
+    const _IM_A_CELESTIAL_TEAPOT = 418;
 
     /**
      * @var int     Unprocessable Entity
      */
-    const _UNPROCESSABLE_ENTITY = 422; // *
+    const _UNPROCESSABLE_ENTITY = 422;
 
     /**
      * @var int     Locked
      */
-    const _LOCKED = 423; // *
+    const _LOCKED = 423;
 
     /**
      * @var int     Failed Dependency
      */
-    const _FAILED_DEPENDENCY = 424; // *
+    const _FAILED_DEPENDENCY = 424;
 
     /**
      * @var int     Reserved for WebDAV advanced collections expired proposal
      */
-    const _RESERVED_FOR_WEBDAV_ADVANCED_COLLECTIONS_EXPIRED_PROPOSAL = 425; // *
+    const _RESERVED_FOR_WEBDAV_ADVANCED_COLLECTIONS_EXPIRED_PROPOSAL = 425;
 
     /**
      * @var int     Upgrade Required
      */
-    const _UPGRADE_REQUIRED = 426; // *
+    const _UPGRADE_REQUIRED = 426;
 
     /**
      * @var int     Precondition Required
      */
-    const _PRECONDITION_REQUIRED = 428; // *
+    const _PRECONDITION_REQUIRED = 428;
 
     /**
      * @var int     Too Many Requests
      */
-    const _TOO_MANY_REQUESTS = 429; // *
+    const _TOO_MANY_REQUESTS = 429;
 
     /**
      * @var int     Request Header Fields Too Large
      */
-    const _REQUEST_HEADERS_FIELDS_TOO_LARGE = 431; // *
+    const _REQUEST_HEADERS_FIELDS_TOO_LARGE = 431;
 
 
     // Server Error - The server failed to fulfill an apparently valid request
@@ -311,27 +311,27 @@ class Status
     /**
      * @var int     Variant Also Negotiates (Experimental)
      */
-    const _VARIANT_ALSO_NEGOTIATES_EXPERIMENTAL = 506; // *
+    const _VARIANT_ALSO_NEGOTIATES_EXPERIMENTAL = 506;
 
     /**
      * @var int     Insufficient Storage
      */
-    const _INSUFFICIENT_STORAGE = 507; // *
+    const _INSUFFICIENT_STORAGE = 507;
 
     /**
      * @var int     Loop Detected
      */
-    const _LOOP_DETECTED = 508; // *
+    const _LOOP_DETECTED = 508;
 
     /**
      * @var int     Not Extended
      */
-    const _NOT_EXTENDED = 510; // *
+    const _NOT_EXTENDED = 510;
 
     /**
      * @var int     Network Authentication Required
      */
-    const _NETWORK_AUTHENTICATION_REQUIRED = 511; // *
+    const _NETWORK_AUTHENTICATION_REQUIRED = 511;
 
     /**
      * @var array   Contains all HTTP/1.1 status codes with their Reason-Phrases.
@@ -407,15 +407,31 @@ class Status
         511 => 'Network Authentication Required'
     );
 
+    /**
+     * Gets the status code Reason-Phrase text.
+     *
+     * @static
+     * @param int   $status         The status to get the Reason-Phrase for
+     * @param bool  $prefixStatus   Whether to prefix the phrase with the status code
+     * @return string   The status Reason-Phrase
+     * @throws \OutOfBoundsException
+     */
     public static function phrase($status, $prefixStatus = false)
     {
-        if (!array_key_exists($status, static::$_codes)) {
+        if (!static::isValid($status)) {
             throw new OutOfBoundsException("The status code {$status} does not exist.");
         }
 
         return (($prefixStatus) ? $status.' ' : '').static::$_codes[$status];
     }
 
+    /**
+     * Determines if the given status is valid.
+     *
+     * @static
+     * @param int   $status     The status to test for validity
+     * @return bool     Whether the status is valid
+     */
     public static function isValid($status)
     {
         return array_key_exists($status, static::$_codes);
