@@ -69,13 +69,12 @@ abstract class Message extends MagicObject
      * Forges a new Message instance. This forges an instance of each derived type class correctly.
      *
      * @static
-     * @param null|string|array $options    The message options or the body contents as a string
+     * @param string|array $options    The message options or the body contents as a string
      * @return Message
      * @throws \InvalidArgumentException
      */
-    public static function forge($options = null)
+    public static function forge($options = array())
     {
-        $options = ($options === null) ? array() : $options;
         if (is_array($options)) {
             return new static($options);
         } elseif (is_string($options)) {
