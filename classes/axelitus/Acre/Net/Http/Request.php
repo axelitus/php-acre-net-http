@@ -29,9 +29,23 @@ use axelitus\Acre\Net\Uri\Uri as Uri;
  */
 class Request
 {
+    /**
+     * @var string      The request's method
+     */
     protected $_method = Method::GET;
+
+    /**
+     * @var Uri     The request's uri
+     */
     protected $_uri = null;
 
+    /**
+     * Method setter.
+     *
+     * @param $method
+     * @return Request
+     * @throws \InvalidArgumentException
+     */
     protected function setMethod($method)
     {
         if (!Method::isValid($method)) {
@@ -43,11 +57,22 @@ class Request
         return $this;
     }
 
+    /**
+     * Method getter.
+     *
+     * @return string
+     */
     protected function getMethod()
     {
         return $this->_method;
     }
 
+    /**
+     * Uri setter.
+     *
+     * @param \axelitus\Acre\Net\Uri\Uri $uri
+     * @return Request
+     */
     protected function setUri(Uri $uri)
     {
         $this->_uri = $uri;
@@ -55,11 +80,21 @@ class Request
         return $this;
     }
 
+    /**
+     * Uri getter.
+     *
+     * @return \axelitus\Acre\Net\Uri\Uri|null
+     */
     protected function getUri()
     {
         return $this->_uri;
     }
 
+    /**
+     * Gets the messages start line.
+     *
+     * @return string
+     */
     protected function startLine()
     {
         $startLine = sprintf("%s %s HTTP/%s\r\n", $this->_method, $this->_uri, $this->_version);

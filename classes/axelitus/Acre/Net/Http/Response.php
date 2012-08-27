@@ -28,8 +28,18 @@ use axelitus\Acre\Net\Http\Status as Status;
  */
 class Response extends Message
 {
+    /**
+     * @var int     The response status code
+     */
     protected $_status = Status::_OK;
 
+    /**
+     * Status setter.
+     *
+     * @param $status
+     * @return Response     This instance for chaining
+     * @throws \InvalidArgumentException
+     */
     protected function setStatus($status)
     {
         if (!Status::isValid($status)) {
@@ -41,11 +51,21 @@ class Response extends Message
         return $this;
     }
 
+    /**
+     * Status getter.
+     *
+     * @return int
+     */
     protected function getStatus()
     {
         return $this->_status;
     }
 
+    /**
+     * Gets the messages start line.
+     *
+     * @return string
+     */
     protected function startLine()
     {
         $startLine = sprintf("HTTP/%s %s\r\n", $this->_version, Status::phrase($this->_status, true));
