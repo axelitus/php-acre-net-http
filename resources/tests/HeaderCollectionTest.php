@@ -37,6 +37,10 @@ class HeaderCollectionTest extends \PHPUnit_Framework_TestCase
         $expected = 'deflate';
         $this->assertEquals($expected, $output);
 
+        $output = $hc->contentType;
+        $expected = 'text/xml';
+        $this->assertEquals($expected, $output);
+
         $hc->set('Accept-Encoding', 'gzip', true);
         $output = $hc->get('Accept-Encoding');
         $expected = array('deflate', 'gzip');
