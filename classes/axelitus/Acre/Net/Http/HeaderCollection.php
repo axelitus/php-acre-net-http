@@ -79,6 +79,76 @@ REGEX_PAIR;
     }
 
     /**
+     * Parses a well-formed headers string into a HeaderCollection object.
+     *
+     * @static
+     * @param string    $headers        The well-formed headers string
+     * @param bool      $splitMultiple  Whether to split a string into multiple entries
+     * @param string    $separator      The separator to use for splitting
+     * @return HeaderCollection     The parsed object
+     */
+    public static function parse($headers, $splitMultiple = false, $separator = ',')
+    {
+        return static::forge(static::parseAsArray($headers, $splitMultiple, $separator));
+    }
+
+    /**
+     * Parses a headers formatted string into a headers associative array.
+     *
+     * @static
+     * @param string    $headers        The headers-formatted string
+     * @param bool      $splitMultiple  Whether to split a string into multiple entries
+     * @param string    $separator      The separator to use for splitting
+     * @return array    The headers associative array
+     * @throws \InvalidArgumentException
+     */
+    public static function parseAsArray($headers, $splitMultiple = false, $separator = ',')
+    {
+        if (!static::validate($headers, $matches)) {
+            throw new InvalidArgumentException("The \$headers parameter is not in the correct format.");
+        }
+
+        $headers = array();
+        if (isset($matches['headers']) and $matches['headers'] != '') {
+            $lines = explode("\r\n", $matches['headers']);
+            foreach ($lines as $line) {
+                if (preg_match(static::REGEX_PAIR, $line, $pair)) {
+                    if ($splitMultiple) {
+                        $values = explode($separator, $pair['value']);
+                        $pair['value'] = array();
+                        foreach ($values as $value) {
+                            $pair['value'][] = trim($value);
+                        }
+                    }
+
+                    $headers[$pair['label']] = $pair['value'];
+                }
+            }
+        }
+
+        return $headers;
+    }
+
+    /**
+     * Tests if the given headers string is valid (using the regex). It can additionally return the named capturing
+     * group(s) using the $matches parameter as a reference.
+     *
+     * @static
+     * @param string        $headers    The headers string to test for validity
+     * @param array|null    $matches    The named capturing groups from the match
+     * @return bool
+     * @throws \InvalidArgumentException
+     */
+    public static function validate($headers, &$matches = null)
+    {
+        if (!is_string($headers)) {
+            throw new InvalidArgumentException("The \$headers parameter must be a string.");
+        }
+
+        return (bool)preg_match(static::REGEX_HEADERS, $headers, $matches);
+    }
+
+    /**
      * Magic setter to set headers like $headers->contentType = 'utf-8;
      * The header labels must be given camelCased and they will get separated by a dash '-'.
      * Examples:
