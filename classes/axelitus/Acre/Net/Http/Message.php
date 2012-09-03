@@ -107,6 +107,25 @@ REGEX;
     }
 
     /**
+     * Tests if the given string is valid (using the regex). It can additionally return the named capturing
+     * group(s) using the $matches parameter as a reference.
+     *
+     * @static
+     * @param string        $message    The http to test for validity
+     * @param array|null    $matches    The named capturing groups from the match
+     * @return bool
+     * @throws \InvalidArgumentException
+     */
+    public static function validate($message, &$matches = null)
+    {
+        if (!is_string($message)) {
+            throw new InvalidArgumentException("The \$message parameter must be a string.");
+        }
+
+        return (bool)preg_match(static::REGEX, $message, $matches);
+    }
+
+    /**
      * Version setter.
      *
      * @param string $version   The protocol version
@@ -137,7 +156,7 @@ REGEX;
      */
     protected function setHeaders(HeaderCollection $headers)
     {
-        $this->_headers = ($headers === null)? HeaderCollection::forge() : $headers;
+        $this->_headers = ($headers === null) ? HeaderCollection::forge() : $headers;
 
         return $this;
     }
