@@ -32,6 +32,28 @@ use InvalidArgumentException;
  */
 abstract class Message extends MagicObject
 {
+    const REGEX = <<<'REGEX'
+/(?J)
+^
+(?#startline)(?<startline>
+  (?#request)(?<request>
+    (?#method)(?<method>OPTIONS|GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT)
+    (?:\ )+(?#uri)(?<uri>[^\ ]+)
+    (?:\ )+HTTP\/(?#version)(?<version>\d.\d)
+  )
+  |(?#response)(?<response>
+    HTTP\/(?#version)(?<version>\d.\d)
+    (?:\ )+(?#status)(?<status>\d{3})
+    (?:\ )+(?#phrase)(?<phrase>.+)
+  )
+)\r\n
+(?#headers)(?<headers>(?:(?:[^:\r\n]+)(?:\ )*:(?:\ )*(?:[^\r\n]+)\r\n)*(?:[^:]+)(?:\ )*:(?:\ )*(?:[^\r\n]+))\r\n
+(?:\r\n(?#body)(?<body>[^$]+))?
+$
+/x
+REGEX;
+
+
     /**
      * @var string  The HTTP protocol version (1.0 or 1.1) of the message
      */
