@@ -186,15 +186,7 @@ abstract class Message extends MagicObject
     public function __toString()
     {
         $message = $this->startLine();
-        foreach ($this->_headers as $fieldName => $fieldValue) {
-            if (is_array($fieldValue)) {
-                foreach ($fieldValue as $value) {
-                    $message .= sprintf("%s: %s\r\n", $fieldName, $value);
-                }
-            } else {
-                $message .= sprintf("%s: %s\r\n", $fieldName, $fieldValue);
-            }
-        }
+        $message .= sprintf("%s\r\n", $this->_headers);
 
         if ($this->_body != '') {
             $message .= sprintf("\r\n%s", $this->_body);
