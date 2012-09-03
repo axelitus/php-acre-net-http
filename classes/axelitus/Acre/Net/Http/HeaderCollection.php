@@ -388,19 +388,15 @@ REGEX_PAIR;
     /**
      * Builds a valid Headers string.
      *
-     * @param bool   $asStrList     Whether multi-valued headers will be presented as a char-separated list
-     *                              instead of appearing multiple times.
+     * @param bool   $multiHeaders  Whether multi-valued headers will be presented as a single header with its
+     *                              values as a char-separated list instead of appearing multiple times.
      * @param string $separator     The separator to use for the char-separated list
      * @return string   The Headers string
      */
-    public function build($asStrList = true, $separator = ',')
+    public function build($multiHeaders = false, $separator = ',')
     {
         $headers = '';
-        if ($asStrList) {
-            foreach (array_keys($this->_headers) as $label) {
-                $headers .= sprintf("%s: %s\r\n", $label, $this->get($label, true, $separator));
-            }
-        } else {
+        if ($multiHeaders) {
             foreach ($this->_headers as $label => $value) {
                 if (is_array($value)) {
                     foreach ($value as $entry) {
@@ -409,6 +405,10 @@ REGEX_PAIR;
                 } else {
                     $headers .= sprintf("%s: %s\r\n", $label, $value);
                 }
+            }
+        } else {
+            foreach (array_keys($this->_headers) as $label) {
+                $headers .= sprintf("%s: %s\r\n", $label, $this->get($label, true, $separator));
             }
         }
 
