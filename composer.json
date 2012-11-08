@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-0": {
-            "axelitus\\Acre\\Net\\Http": "classes/"
+            "axelitus\\Acre\\Net\\Http": "src/"
         }
     }
 }
