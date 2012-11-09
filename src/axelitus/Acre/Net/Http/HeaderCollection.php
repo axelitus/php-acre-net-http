@@ -190,6 +190,7 @@ REGEX_PAIR;
      * @param mixed     $value      The header's value
      * @param bool      $append     Whether to append instead of replace
      * @return HeaderCollection     This instance for chaining
+     * @throws \InvalidArgumentException
      */
     public function set($label, $value, $append = false)
     {
@@ -213,12 +214,12 @@ REGEX_PAIR;
      * Gets the header with the given name. The name of the header must be the actual dash-separated header label:
      * 'Content-Type', 'Content-MD5', etc.
      *
-     * @param string    $header     The header's label name
+     * @param string    $label      The header's label name
      * @param bool      $asStrList  Whether to return the header value as a char separated list
-     * @param
      * @return mixed    The header's value
+     * @throws \OutOfBoundsException
      */
-    public function get($label, $asStrList = false, $separator = ',')
+    public function get($label, $asStrList = false)
     {
         if (!$this->has($label)) {
             throw new OutOfBoundsException(sprintf("Header %s does not exist.", $label));
@@ -249,7 +250,7 @@ REGEX_PAIR;
             if ($index === null or count($this->_headers[$label]) == 0) {
                 unset($this->_headers[$label]);
             } else {
-                if (!$this->hasHeaderEntry($label, $index)) {
+                if (!$this->hasEntry($label, $index)) {
                     throw new OutOfBoundsException("The \$index value {$index} for header {$label} does not exists.");
                 }
 
@@ -264,7 +265,7 @@ REGEX_PAIR;
     /**
      * Verifies if the collection has the given header.
      *
-     * @param string    $header     The header label name
+     * @param string    $label  The header label name
      * @return bool     Whether the collection has the header
      * @throws \InvalidArgumentException
      */
@@ -309,6 +310,7 @@ REGEX_PAIR;
      *
      * @param array $headers    The new header values as an associative array
      * @param bool  $append     Whether to append the headers instead of replacing them
+     * @throws \InvalidArgumentException
      */
     public function add(array $headers, $append = true)
     {
@@ -446,7 +448,7 @@ REGEX_PAIR;
      * Implements IteratorAggregate Interface
      *
      * @see     http://www.php.net/manual/en/class.iteratoraggregate.php     The IteratorAggregate interface
-     * @return  Traversable
+     * @return  ArrayIterator
      */
     public function getIterator()
     {
