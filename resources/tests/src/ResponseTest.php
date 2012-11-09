@@ -21,8 +21,9 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $output);
     }
 
-    public function testValidate()
+    public function testValidateMessageOK()
     {
+        // HTTP Response Message Example from http://www.jmarshall.com/easy/http/
         $message = <<<'MSG'
 HTTP/1.0 200 OK
 Date: Fri, 31 Dec 1999 23:59:59 GMT
@@ -33,7 +34,20 @@ Content-Length: 1354
 MSG;
         $output = Message::validate($message);
         $this->assertTrue($output);
+    }
 
+    public function testValidateResponseOK()
+    {
+        // HTTP Response Message Example from http://www.jmarshall.com/easy/http/
+        $message = <<<'MSG'
+HTTP/1.0 200 OK
+Date: Fri, 31 Dec 1999 23:59:59 GMT
+Content-Type: text/html
+Content-Length: 1354
 
+<html><body><h1>Happy New Millennium!</h1></body></html>
+MSG;
+        $output = Response::validate($message);
+        $this->assertTrue($output);
     }
 }
