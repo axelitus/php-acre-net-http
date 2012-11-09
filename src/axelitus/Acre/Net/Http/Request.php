@@ -27,7 +27,7 @@ use axelitus\Acre\Net\Uri\Uri as Uri;
  * @category    Net\Http
  * @author      Axel Pardemann (dev@axelitus.mx)
  */
-class Request
+class Request extends Message
 {
     /**
      * @var string      The request's method
@@ -38,6 +38,29 @@ class Request
      * @var Uri     The request's uri
      */
     protected $_uri = null;
+
+    /**
+     * Tests if the given string is valid (using the regex). It can additionally return the named capturing
+     * group(s) using the $matches parameter as a reference.
+     *
+     * @static
+     * @param string        $message    The http to test for validity
+     * @param array|null    $matches    The named capturing groups from the match
+     * @return bool
+     * @throws \InvalidArgumentException
+     */
+    public static function validate($message, &$matches = null)
+    {
+        if (!parent::validate($message, $matches)) {
+            return false;
+        }
+
+        if ($matches['request'] == '' or $matches['response'] != '') {
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      * Method setter.

@@ -34,6 +34,29 @@ class Response extends Message
     protected $_status = Status::_OK;
 
     /**
+     * Tests if the given string is valid (using the regex). It can additionally return the named capturing
+     * group(s) using the $matches parameter as a reference.
+     *
+     * @static
+     * @param string        $message    The http to test for validity
+     * @param array|null    $matches    The named capturing groups from the match
+     * @return bool
+     * @throws \InvalidArgumentException
+     */
+    public static function validate($message, &$matches = null)
+    {
+        if (!parent::validate($message, $matches)) {
+            return false;
+        }
+
+        if ($matches['response'] == '' or $matches['request'] != '') {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Status setter.
      *
      * @param $status
