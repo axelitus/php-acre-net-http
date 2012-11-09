@@ -36,19 +36,11 @@ use axelitus\Acre\Common\Str as Str;
 class HeaderCollection implements Countable, ArrayAccess, IteratorAggregate
 {
     const REGEX_HEADERS = <<<'REGEX_HEADERS'
-/
-^
-(?#headers)(?<headers>(?:(?:[^:\r\n]+)(?:\ )*:(?:\ )*(?:[^\r\n]+)\r\n)*(?:[^:]+)(?:\ )*:(?:\ )*(?:[^\r\n]+))(?:\r\n)?
-$
-/x
+/^(?#headers)(?<headers>(?:(?:[^:\r\n]+)(?:\ )*:(?:\ )*(?:[^\r\n]+)\r\n)*(?:[^:]+)(?:\ )*:(?:\ )*(?:[^\r\n]+))(?:\r\n)?$/x
 REGEX_HEADERS;
 
     const REGEX_PAIR = <<<'REGEX_PAIR'
-/
-^
-(?<label>[^:\r\n]+)(?:\ )*:(?:\ )*(?<value>[^\r\n]+)
-$
-/x
+/^(?<label>[^:\r\n]+)(?:\ )*:(?:\ )*(?<value>[^\r\n]+)$/x
 REGEX_PAIR;
 
     /**
