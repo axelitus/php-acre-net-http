@@ -74,11 +74,11 @@ class Method
      * @param string    $method     The method to test for validity
      * @return bool     Whether the method is valid
      */
-    public static function isValid($method)
+    public static function isValid($method, $case_sensitive = true)
     {
         $methods = array(static::GET, static::CONNECT, static::DELETE, static::HEAD, static::OPTIONS, static::POST,
                          static::PUT, static::TRACE);
 
-        return Str::isOneOf($method, $methods);
+        return Str::isOneOf($method, $methods, $case_sensitive);
     }
 }
