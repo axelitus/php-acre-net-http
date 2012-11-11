@@ -4,12 +4,25 @@ namespace axelitus\Acre\Net\Http;
 
 class ResponseTest extends \PHPUnit_Framework_TestCase
 {
+    // HTTP Response Message Example from http://www.jmarshall.com/easy/http/
+    private $message_OK = <<<'MSG'
+HTTP/1.0 200 OK
+Date: Fri, 31 Dec 1999 23:59:59 GMT
+Content-Type: text/html
+Content-Length: 1354
+
+<html><body><h1>Happy New Millennium!</h1></body></html>
+MSG;
+
     public function setUp()
     {
         // nothing to do here...
     }
 
-    public function testForge()
+    /**
+     * testForgePrint
+     */
+    public function testForgePrint()
     {
         $response = Response::forge();
         $response->headers->charset = 'utf-8';
@@ -17,37 +30,33 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $response->getBodyLength(true);
 
         $output = (string)$response;
-        $expected = "HTTP/1.1 200 OK\r\nCharset: utf-8\r\nContent-Type: plain/text\r\nContent-Length: 0\r\n";
+        $expected = <<<'EXPECTED'
+HTTP/1.1 200 OK
+Charset: utf-8
+Content-Type: plain/text
+Content-Length: 0
+
+EXPECTED;
         $this->assertEquals($expected, $output);
     }
 
+    /**
+     * testValidateMessageOK
+     */
     public function testValidateMessageOK()
     {
-        // HTTP Response Message Example from http://www.jmarshall.com/easy/http/
-        $message = <<<'MSG'
-HTTP/1.0 200 OK
-Date: Fri, 31 Dec 1999 23:59:59 GMT
-Content-Type: text/html
-Content-Length: 1354
-
-<html><body><h1>Happy New Millennium!</h1></body></html>
-MSG;
-        $output = Message::validate($message);
+        $output = Message::validate($this->message_OK);
         $this->assertTrue($output);
     }
 
+    /**
+     * testValidateResponseOK
+     *
+     * @depends testValidateMessageOK
+     */
     public function testValidateResponseOK()
     {
-        // HTTP Response Message Example from http://www.jmarshall.com/easy/http/
-        $message = <<<'MSG'
-HTTP/1.0 200 OK
-Date: Fri, 31 Dec 1999 23:59:59 GMT
-Content-Type: text/html
-Content-Length: 1354
-
-<html><body><h1>Happy New Millennium!</h1></body></html>
-MSG;
-        $output = Response::validate($message);
+        $output = Response::validate($this->message_OK);
         $this->assertTrue($output);
     }
 }
