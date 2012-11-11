@@ -408,6 +408,17 @@ class Status
     );
 
     /**
+     * Gets the valid codes associative array.
+     *
+     * @static
+     * @return array    The valid codes associative array (code => phrase)
+     */
+    public static function codes()
+    {
+        return static::$_codes;
+    }
+
+    /**
      * Gets the status code Reason-Phrase text.
      *
      * @static
