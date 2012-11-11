@@ -4,11 +4,23 @@ namespace axelitus\Acre\Net\Http;
 
 class HeaderCollectionTest extends \PHPUnit_Framework_TestCase
 {
+    private $headers = <<<'HEADERS'
+Accept: */*
+Accept-Language: en-gb
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0)
+Host: www.httpwatch.com
+Connection: Keep-Alive
+HEADERS;
+
     public function setUp()
     {
         // nothing to do here...
     }
 
+    /**
+     * testHeaderCollection
+     */
     public function testHeaderCollection()
     {
         $hc = HeaderCollection::forge();
@@ -59,18 +71,23 @@ class HeaderCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $output);
     }
 
+    /**
+     * testValidate
+     */
+    public function testValidate()
+    {
+        $output = HeaderCollection::validate($this->headers);
+        $this->assertTrue($output);
+    }
+
+    /**
+     * testParse
+     *
+     * @depends testValidate
+     */
     public function testParse()
     {
-        $headers = <<<'HEADERS'
-Accept:*/*
-Accept-Language: en-gb
-Accept-Encoding: gzip, deflate
-User-Agent: Mozilla/4.0 (compatible; MSIE 6.0)
-Host: www.httpwatch.com
-Connection: Keep-Alive
-HEADERS;
-
-        $output = HeaderCollection::parseAsArray($headers);
+        $output = HeaderCollection::parseAsArray($this->headers);
         $expected = array(
             'Accept' => '*/*',
             'Accept-Language' => 'en-gb',
@@ -81,16 +98,9 @@ HEADERS;
         );
         $this->assertEquals($expected, $output);
 
-        $hc = HeaderCollection::parse($headers, true);
+        $hc = HeaderCollection::parse($this->headers, true);
         $output = (string) $hc;
-        $expected = <<<'EXPECTED'
-Accept: */*
-Accept-Language: en-gb
-Accept-Encoding: gzip, deflate
-User-Agent: Mozilla/4.0 (compatible; MSIE 6.0)
-Host: www.httpwatch.com
-Connection: Keep-Alive
-EXPECTED;
+        $expected = $this->headers;
         $this->assertEquals($expected, $output);
     }
 }
