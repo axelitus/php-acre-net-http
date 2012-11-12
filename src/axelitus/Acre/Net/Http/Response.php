@@ -91,7 +91,7 @@ class Response extends Message
      */
     protected function startLine()
     {
-        $startLine = sprintf("HTTP/%s %s\r\n", $this->_version, Status::phrase($this->status, true));
+        $startLine = sprintf("HTTP/%s %s\r\n", $this->version, Status::phrase($this->status, true));
 
         return $startLine;
     }
