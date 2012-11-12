@@ -39,6 +39,12 @@ MSG;
         $response->getBodyLength(false);
 
         $output = (string)$response;
+
+        // Change the newlines to the testing platform specific PHP_EOL so we can accurately
+        // test against the original headers string.
+        // The class uses \r\n as the newline default as stated in the IETF RFC2616 standard.
+        $output = str_replace("\r\n", PHP_EOL, $output);
+
         $expected = <<<'EXPECTED'
 GET  HTTP/1.1
 Charset: utf-8
