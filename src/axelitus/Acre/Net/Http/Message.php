@@ -32,6 +32,8 @@ use InvalidArgumentException;
  */
 abstract class Message extends MagicObject
 {
+    // Due to newlines being different in Linux and Windows we need to use PCRE (*ANYCRLF)
+    // to match them, that is \R escaped char.
     const REGEX = <<<'REGEX'
 /(?J)
 ^
@@ -46,9 +48,9 @@ abstract class Message extends MagicObject
     (?:\ )+(?#status)(?<status>\d{3})
     (?:\ )+(?#phrase)(?<phrase>.+)
   )
-)\r\n
-(?#headers)(?<headers>(?:(?:[^:\r\n]+)(?:\ )*:(?:\ )*(?:[^\r\n]+)\r\n)*(?:[^:]+)(?:\ )*:(?:\ )*(?:[^\r\n]+))\r\n
-(?:\r\n(?#body)(?<body>[^$]+))?
+)\R
+(?#headers)(?<headers>(?:(?:[^:\R]+)(?:\ )*:(?:\ )*(?:[^\R]+)\R)*(?:[^:]+)(?:\ )*:(?:\ )*(?:[^\R]+))\R
+(?:\R(?#body)(?<body>[^$]+))?
 $
 /x
 REGEX;
@@ -79,7 +81,7 @@ REGEX;
         $options['headers'] = !isset($options['headers']) ? array() : $options['headers'];
         if (!$options['headers'] instanceof HeaderCollection) {
             $options['headers'] = is_array($options['headers']) ? HeaderCollection::forge($options['headers'])
-                : new HeaderCollection();
+                : HeaderCollection::forge();
         }
 
         foreach ($options as $key => $value) {
