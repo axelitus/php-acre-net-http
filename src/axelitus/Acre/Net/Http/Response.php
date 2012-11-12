@@ -31,7 +31,7 @@ class Response extends Message
     /**
      * @var int     The response status code
      */
-    protected $_status = Status::_OK;
+    protected $status = Status::_OK;
 
     /**
      * Tests if the given string is valid (using the regex). It can additionally return the named capturing
@@ -69,7 +69,7 @@ class Response extends Message
             throw new InvalidArgumentException("{$status} is not a valid HTTP status code.");
         }
 
-        $this->_status = $status;
+        $this->status = $status;
 
         return $this;
     }
@@ -81,7 +81,7 @@ class Response extends Message
      */
     protected function getStatus()
     {
-        return $this->_status;
+        return $this->status;
     }
 
     /**
@@ -91,7 +91,7 @@ class Response extends Message
      */
     protected function startLine()
     {
-        $startLine = sprintf("HTTP/%s %s\r\n", $this->_version, Status::phrase($this->_status, true));
+        $startLine = sprintf("HTTP/%s %s\r\n", $this->_version, Status::phrase($this->status, true));
 
         return $startLine;
     }

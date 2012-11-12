@@ -59,17 +59,17 @@ REGEX;
     /**
      * @var string  The HTTP protocol version (1.0 or 1.1) of the message
      */
-    protected $_version = '1.1';
+    protected $version = '1.1';
 
     /**
      * @var HeaderCollection    The message headers
      */
-    protected $_headers = null;
+    protected $headers = null;
 
     /**
      * @var string      The body (contents) of the message
      */
-    protected $_body = '';
+    protected $body = '';
 
     /**
      * Protected constructor to prevent instantiation outside this class.
@@ -135,7 +135,7 @@ REGEX;
      */
     protected function setVersion($version)
     {
-        $this->_version = $version;
+        $this->version = $version;
 
         return $this;
     }
@@ -147,7 +147,7 @@ REGEX;
      */
     protected function getVersion()
     {
-        return $this->_version;
+        return $this->version;
     }
 
     /**
@@ -158,7 +158,7 @@ REGEX;
      */
     protected function setHeaders(HeaderCollection $headers)
     {
-        $this->_headers = ($headers === null) ? HeaderCollection::forge() : $headers;
+        $this->headers = ($headers === null) ? HeaderCollection::forge() : $headers;
 
         return $this;
     }
@@ -170,7 +170,7 @@ REGEX;
      */
     protected function getHeaders()
     {
-        return $this->_headers;
+        return $this->headers;
     }
 
     /**
@@ -181,7 +181,7 @@ REGEX;
      */
     protected function setBody($body)
     {
-        $this->_body = $body;
+        $this->body = $body;
 
         return $this;
     }
@@ -193,7 +193,7 @@ REGEX;
      */
     protected function getBody()
     {
-        return $this->_body;
+        return $this->body;
     }
 
     /**
@@ -204,7 +204,7 @@ REGEX;
      */
     public function getBodyLength($setHeader = false)
     {
-        $length = Str::length($this->_body);
+        $length = Str::length($this->body);
 
         if ($setHeader) {
             $this->headers->contentLength = $length;
@@ -219,7 +219,7 @@ REGEX;
      * @abstract
      * @return string
      */
-    protected abstract function startLine();
+    abstract protected function startLine();
 
     /**
      * The toString magic function to get a string representation of the object.
@@ -229,10 +229,10 @@ REGEX;
     public function __toString()
     {
         $message = $this->startLine();
-        $message .= sprintf("%s\r\n", $this->_headers);
+        $message .= sprintf("%s\r\n", $this->headers);
 
-        if ($this->_body != '') {
-            $message .= sprintf("\r\n%s", $this->_body);
+        if ($this->body != '') {
+            $message .= sprintf("\r\n%s", $this->body);
         }
 
         return $message;

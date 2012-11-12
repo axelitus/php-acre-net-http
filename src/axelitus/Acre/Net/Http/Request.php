@@ -32,12 +32,12 @@ class Request extends Message
     /**
      * @var string      The request's method
      */
-    protected $_method = Method::GET;
+    protected $method = Method::GET;
 
     /**
      * @var Uri     The request's uri
      */
-    protected $_uri = null;
+    protected $uri = null;
 
     /**
      * Tests if the given string is valid (using the regex). It can additionally return the named capturing
@@ -75,7 +75,7 @@ class Request extends Message
             throw new InvalidArgumentException("{$method} is not a valid HTTP method.");
         }
 
-        $this->_method = $method;
+        $this->method = $method;
 
         return $this;
     }
@@ -87,7 +87,7 @@ class Request extends Message
      */
     protected function getMethod()
     {
-        return $this->_method;
+        return $this->method;
     }
 
     /**
@@ -98,7 +98,7 @@ class Request extends Message
      */
     protected function setUri(Uri $uri)
     {
-        $this->_uri = $uri;
+        $this->uri = $uri;
 
         return $this;
     }
@@ -110,7 +110,7 @@ class Request extends Message
      */
     protected function getUri()
     {
-        return $this->_uri;
+        return $this->uri;
     }
 
     /**
@@ -120,7 +120,7 @@ class Request extends Message
      */
     protected function startLine()
     {
-        $startLine = sprintf("%s %s HTTP/%s\r\n", $this->_method, $this->_uri, $this->_version);
+        $startLine = sprintf("%s %s HTTP/%s\r\n", $this->method, $this->uri, $this->version);
 
         return $startLine;
     }
