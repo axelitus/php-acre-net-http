@@ -99,9 +99,10 @@ HEADERS;
         $this->assertEquals($expected, $output);
 
         $hc = HeaderCollection::parse($this->headers, true);
-        $output = (string) $hc;
+        $output = (string)$hc;
 
-        // Change the newlines to the testing platform PHP_EOL so we can accurately test against the original headers string
+        // Change the newlines to the testing platform specific PHP_EOL so we can accurately
+        // test against the original headers string.
         // The class uses \r\n as the newline default as stated in the IETF RFC2616 standard.
         $output = str_replace("\r\n", PHP_EOL, $output);
 
