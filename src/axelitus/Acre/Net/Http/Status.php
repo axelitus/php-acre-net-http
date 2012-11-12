@@ -30,7 +30,7 @@ class Status
      * @var int     Continue    As continue is a reserved word an underscore was added to each constant to prefix them
      *                          and remain consistent.
      **/
-    const __CONTINUE = 100;
+    const _CONTINUE = 100;
 
     /**
      * @var int     Switching Protocols
