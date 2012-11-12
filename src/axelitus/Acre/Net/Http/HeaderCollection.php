@@ -35,12 +35,16 @@ use axelitus\Acre\Common\Str as Str;
  */
 class HeaderCollection implements Countable, ArrayAccess, IteratorAggregate
 {
+    // Due to newlines being different in Linux and Windows we need to use PCRE (*ANYCRLF)
+    // to match them, that is \R escaped char.
     const REGEX_HEADERS = <<<'REGEX_HEADERS'
-/^(?#headers)(?<headers>(?:(?:[^:\r\n]+)(?:\ )*:(?:\ )*(?:[^\r\n]+)\r\n)*(?:[^:]+)(?:\ )*:(?:\ )*(?:[^\r\n]+))(?:\r\n)?$/x
+/^(?#headers)(?<headers>(?:(?:[^:\R]+)(?:\ )*:(?:\ )*(?:[^\R]+)\R)*(?:[^:]+)(?:\ )*:(?:\ )*(?:[^\R]+))(?:\R)?$/x
 REGEX_HEADERS;
 
+    // Due to newlines being different in Linux and Windows we need to use PCRE (*ANYCRLF)
+    // to match them, that is \R escaped char.
     const REGEX_PAIR = <<<'REGEX_PAIR'
-/^(?<label>[^:\r\n]+)(?:\ )*:(?:\ )*(?<value>[^\r\n]+)$/x
+/^(?<label>[^:\R]+)(?:\ )*:(?:\ )*(?<value>[^\R]+)$/x
 REGEX_PAIR;
 
     /**
@@ -102,7 +106,9 @@ REGEX_PAIR;
 
         $headers = array();
         if (isset($matches['headers']) and $matches['headers'] != '') {
-            $lines = explode("\r\n", $matches['headers']);
+            // Due to newlines being different in Linux and Windows we need to use PCRE (*ANYCRLF)
+            // to match them, that is \R escaped char.
+            $lines = preg_split("/\R/", $matches['headers']);
             foreach ($lines as $line) {
                 if (preg_match(static::REGEX_PAIR, $line, $pair)) {
                     if ($splitMultiple) {
@@ -169,6 +175,7 @@ REGEX_PAIR;
     public function __get($label)
     {
         $label = Str::separated($label, 'ucfirst', '-');
+
         return $this->get($label);
     }
 
@@ -268,6 +275,7 @@ REGEX_PAIR;
         }
 
         $label = static::cleanLabel($label);
+
         return array_key_exists($label, $this->_headers);
     }
 

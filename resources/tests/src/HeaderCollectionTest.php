@@ -15,7 +15,7 @@ HEADERS;
 
     public function setUp()
     {
-        // nothing to do here...
+
     }
 
     /**
@@ -100,6 +100,11 @@ HEADERS;
 
         $hc = HeaderCollection::parse($this->headers, true);
         $output = (string) $hc;
+
+        // Change the newlines to the testing platform PHP_EOL so we can accurately test against the original headers string
+        // The class uses \r\n as the newline default as stated in the IETF RFC2616 standard.
+        $output = str_replace("\r\n", PHP_EOL, $output);
+
         $expected = $this->headers;
         $this->assertEquals($expected, $output);
     }
