@@ -50,7 +50,7 @@ REGEX_PAIR;
     /**
      * @var array   The headers in the collection
      */
-    protected $_headers = array();
+    protected $headers = array();
 
     /**
      * Protected constructor to prevent instantiation outside this class.
@@ -201,9 +201,9 @@ REGEX_PAIR;
         $value = static::cleanValue($value);
 
         if (!$append or !$this->has($label)) {
-            $this->_headers[$label] = is_array($value) ? $value : array($value);
+            $this->headers[$label] = is_array($value) ? $value : array($value);
         } else {
-            array_push($this->_headers[$label], $value);
+            array_push($this->headers[$label], $value);
         }
 
         return $this;
@@ -224,7 +224,7 @@ REGEX_PAIR;
             throw new OutOfBoundsException(sprintf("Header %s does not exist.", $label));
         }
 
-        $value = $header = static::flatten($this->_headers[$label]);
+        $value = $header = static::flatten($this->headers[$label]);
         if (is_array($header) and $asStrList) {
             $value = '';
             foreach ($header as $val) {
@@ -246,17 +246,17 @@ REGEX_PAIR;
     public function remove($label, $index = null)
     {
         if ($this->has($label)) {
-            if ($index === null or count($this->_headers[$label]) == 0) {
-                unset($this->_headers[$label]);
+            if ($index === null or count($this->headers[$label]) == 0) {
+                unset($this->headers[$label]);
             } else {
                 if (!$this->hasEntry($label, $index)) {
                     throw new OutOfBoundsException("The \$index value {$index} for header {$label} does not exists.");
                 }
 
-                unset($this->_headers[$label][$index]);
+                unset($this->headers[$label][$index]);
 
                 // Re-index header entries array
-                $this->_headers[$label] = array_values($this->_headers[$label]);
+                $this->headers[$label] = array_values($this->headers[$label]);
             }
         }
     }
@@ -276,7 +276,7 @@ REGEX_PAIR;
 
         $label = static::cleanLabel($label);
 
-        return array_key_exists($label, $this->_headers);
+        return array_key_exists($label, $this->headers);
     }
 
     /**
@@ -289,7 +289,7 @@ REGEX_PAIR;
      */
     public function hasEntry($label, $index)
     {
-        return ($this->has($label) and array_key_exists($index, $this->_headers[$label]));
+        return ($this->has($label) and array_key_exists($index, $this->headers[$label]));
     }
 
     /**
@@ -301,7 +301,7 @@ REGEX_PAIR;
      */
     public function load(array $headers)
     {
-        $this->_headers = array();
+        $this->headers = array();
         $this->add($headers);
     }
 
@@ -386,7 +386,7 @@ REGEX_PAIR;
      */
     public function count()
     {
-        return count($this->_headers);
+        return count($this->headers);
     }
 
     //</editor-fold>
@@ -452,7 +452,7 @@ REGEX_PAIR;
      */
     public function getIterator()
     {
-        return new ArrayIterator($this->_headers);
+        return new ArrayIterator($this->headers);
     }
 
     //</editor-fold>
@@ -469,7 +469,7 @@ REGEX_PAIR;
     {
         $headers = '';
         if ($multiHeaders) {
-            foreach ($this->_headers as $label => $value) {
+            foreach ($this->headers as $label => $value) {
                 if (is_array($value)) {
                     foreach ($value as $entry) {
                         $headers .= sprintf("%s: %s\r\n", $label, $entry);
@@ -479,7 +479,7 @@ REGEX_PAIR;
                 }
             }
         } else {
-            foreach (array_keys($this->_headers) as $label) {
+            foreach (array_keys($this->headers) as $label) {
                 $headers .= sprintf("%s: %s\r\n", $label, $this->get($label, true, $separator));
             }
         }
@@ -496,5 +496,4 @@ REGEX_PAIR;
     {
         return $this->build();
     }
-
 }
