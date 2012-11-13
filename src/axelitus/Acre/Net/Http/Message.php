@@ -56,6 +56,20 @@ $
 /x
 REGEX;
 
+    /**
+     * @var Message type: request
+     */
+    const TYPE_REQUEST = 'request';
+
+    /**
+     * @var Message type: response
+     */
+    const TYPE_RESPONSE = 'response';
+
+    /**
+     * @var Message type: invalid
+     */
+    const TYPE_INVALID = 'invalid';
 
     /**
      * @var string  The HTTP protocol version (1.0 or 1.1) of the message
@@ -107,6 +121,48 @@ REGEX;
         } else {
             throw new InvalidArgumentException("The \$options parameter must be an array or a string.");
         }
+    }
+
+    /**
+     * Identifies the message type
+     *
+     * @param string|Message $message   The message string or object to identify the type
+     * @return string
+     * @throws \InvalidArgumentException
+     */
+    public static function type($message)
+    {
+        if (is_object($message) and $message instanceof Message) {
+            // Test for object
+            if ($message instanceof Request) {
+                return static::TYPE_REQUEST;
+            } elseif ($message instanceof Response) {
+                return static::TYPE_RESPONSE;
+            }
+
+            return static::TYPE_INVALID;
+        } else if (is_string($message)) {
+            // Test for string
+            if ($message == '') {
+                throw new InvalidArgumentException("The \$message string cannot be empty.");
+            }
+
+            try {
+                if (static::validate($message, $matches)) {
+                    if ($matches['request'] != '') {
+                        return static::TYPE_REQUEST;
+                    } else {
+                        return static::TYPE_RESPONSE;
+                    }
+                } else {
+                    return static::TYPE_INVALID;
+                }
+            } catch (\Exception $ex) {
+                return static::TYPE_INVALID;
+            }
+        }
+
+        return static::TYPE_INVALID;
     }
 
     /**

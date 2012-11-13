@@ -35,7 +35,7 @@ MSG;
         // test against the original headers string.
         // The class uses \r\n as the newline default as stated in the IETF RFC2616 standard.
         $output = str_replace("\r\n", PHP_EOL, $output);
-        
+
         $expected = <<<'EXPECTED'
 HTTP/1.1 200 OK
 Charset: utf-8
@@ -64,5 +64,23 @@ EXPECTED;
     {
         $output = Response::validate($this->message_OK);
         $this->assertTrue($output);
+    }
+
+    /**
+     * testGetMessageType
+     *
+     * @test
+     */
+    public function testGetMessageType()
+    {
+        $message = Response::forge();
+        $output = Message::type($message);
+        $expected = Message::TYPE_RESPONSE;
+        $this->assertEquals($expected, $output);
+
+        $message = (string)$message;
+        $output = Message::type($message);
+        $expected = Message::TYPE_RESPONSE;
+        $this->assertEquals($expected, $output);
     }
 }

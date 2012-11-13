@@ -30,6 +30,8 @@ MSG;
 
     /**
      * testForgePrint
+     *
+     * @test
      */
     public function testForgePrint()
     {
@@ -56,6 +58,8 @@ EXPECTED;
 
     /**
      * testValidateMessageGET
+     *
+     * @test
      */
     public function testValidateMessageGET()
     {
@@ -66,6 +70,7 @@ EXPECTED;
     /**
      * testValidateRequestGET
      *
+     * @test
      * @depends testValidateMessageGET
      */
     public function testValidateRequestGET()
@@ -76,6 +81,8 @@ EXPECTED;
 
     /**
      * testValidateMessagePOST
+     *
+     * @test
      */
     public function testValidateMessagePOST()
     {
@@ -86,11 +93,30 @@ EXPECTED;
     /**
      * testValidateRequestPOST
      *
+     * @test
      * @depends testValidateMessagePOST
      */
     public function testValidateRequestPOST()
     {
         $output = Request::validate($this->message_POST);
         $this->assertTrue($output);
+    }
+
+    /**
+     * testGetMessageType
+     *
+     * @test
+     */
+    public function testGetMessageType()
+    {
+        $message = Request::forge();
+        $output = Message::type($message);
+        $expected = Message::TYPE_REQUEST;
+        $this->assertEquals($expected, $output);
+
+        $message = (string)$message;
+        $output = Message::type($message);
+        $expected = Message::TYPE_REQUEST;
+        $this->assertEquals($expected, $output);
     }
 }
