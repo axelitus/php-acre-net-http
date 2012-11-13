@@ -33,14 +33,15 @@ use InvalidArgumentException;
 abstract class Message extends MagicObject
 {
     // Due to newlines being different in Linux and Windows we need to use PCRE (*ANYCRLF)
-    // to match them, that is \R escaped char.
+    // to match them, that is \R escaped char. Also the (?J) at the beginning prevents the
+    // compiler from complaining about duplicate named groups.
     const REGEX = <<<'REGEX'
 /(?J)
 ^
 (?#startline)(?<startline>
   (?#request)(?<request>
     (?#method)(?<method>OPTIONS|GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT)
-    (?:\ )+(?#uri)(?<uri>[^\ ]+)
+    (?:\ )+(?:(?#uri)(?<uri>[^\ |\R]+))?
     (?:\ )+HTTP\/(?#version)(?<version>\d.\d)
   )
   |(?#response)(?<response>
@@ -49,8 +50,8 @@ abstract class Message extends MagicObject
     (?:\ )+(?#phrase)(?<phrase>.+)
   )
 )\R
-(?#headers)(?<headers>(?:(?:[^:\R]+)(?:\ )*:(?:\ )*(?:[^\R]+)\R)*(?:[^:]+)(?:\ )*:(?:\ )*(?:[^\R]+))\R
-(?:\R(?#body)(?<body>[^$]+))?
+(?:(?#headers)(?<headers>(?:(?:[^:\R]+)(?:\ )*:(?:\ )*(?:[^\R]+)\R)*(?:[^:]+)(?:\ )*:(?:\ )*(?:[^\R]+))\R
+(?:\R(?#body)(?<body>[^$]+))?)?
 $
 /x
 REGEX;
