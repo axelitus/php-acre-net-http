@@ -230,7 +230,10 @@ REGEX;
     public function __toString()
     {
         $message = $this->startLine();
-        $message .= sprintf("%s\r\n", $this->headers);
+
+        if (!$this->headers->isEmpty()) {
+            $message .= sprintf("%s\r\n", $this->headers);
+        }
 
         if ($this->body != '') {
             $message .= sprintf("\r\n%s", $this->body);

@@ -375,6 +375,20 @@ REGEX_PAIR;
         return (is_array($header) and count($header) == 1) ? $header[0] : $header;
     }
 
+    /**
+     * Verifies if the HeaderCollection is empty
+     *
+     * @return bool     Whether the collection is empty
+     */
+    public function isEmpty()
+    {
+        if(count($this) == 0){
+            return true;
+        }
+
+        return false;
+    }
+
     //<editor-fold desc="Countable Interface">
     /**
      * Implements Countable interface
