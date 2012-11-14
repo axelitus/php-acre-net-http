@@ -504,6 +504,18 @@ REGEX_PAIR;
     }
 
     /**
+     * Gets the headers as a one-dimensional strings array
+     *
+     * @return array
+     */
+    public function stringArray()
+    {
+        $headers = (string)$this;
+
+        return explode("\r\n", $headers);
+    }
+
+    /**
      * The toString magic function to get a string representation of the object.
      *
      * @return string   The string representation of this object
