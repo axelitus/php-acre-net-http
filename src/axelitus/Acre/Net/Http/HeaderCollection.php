@@ -36,9 +36,11 @@ use axelitus\Acre\Common\Str as Str;
 class HeaderCollection implements Countable, ArrayAccess, IteratorAggregate
 {
     // Due to newlines being different in Linux and Windows we need to use PCRE (*ANYCRLF)
-    // to match them, that is \R escaped char.
+    // to match them, that is \R escaped special char. The problem with \R is that in
+    // character groups it has no special meaning so [^\R] will not match any non-newline character,
+    // instead it will simply match any character which is not R.
     const REGEX_HEADERS = <<<'REGEX_HEADERS'
-/^(?#headers)(?<headers>(?:(?:[^:\R]+)(?:\ )*:(?:\ )*(?:[^\R]+)\R)*(?:[^:]+)(?:\ )*:(?:\ )*(?:[^\R]+))(?:\R)?$/x
+/^(?:(?#headers)(?<headers>(?:(?:[^:\r\n]+)(?:\ )*:(?:\ )*(?:[^\r\n]+)\R)*(?:[^:\r\n]+)(?:\ )*:(?:\ )*(?:[^\r\n]+))(?:\R)?)?$/x
 REGEX_HEADERS;
 
     // Due to newlines being different in Linux and Windows we need to use PCRE (*ANYCRLF)

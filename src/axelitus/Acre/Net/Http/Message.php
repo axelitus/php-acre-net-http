@@ -33,15 +33,18 @@ use InvalidArgumentException;
 abstract class Message extends MagicObject
 {
     // Due to newlines being different in Linux and Windows we need to use PCRE (*ANYCRLF)
-    // to match them, that is \R escaped char. Also the (?J) at the beginning prevents the
-    // compiler from complaining about duplicate named groups.
+    // to match them, that is \R escaped special char. The problem with \R is that in
+    // character groups it has no special meaning so [^\R] will not match any non-newline character,
+    // instead it will simply match any character which is not R.
+    // Also the (?J) at the beginning prevents the compiler from complaining about duplicate
+    // named groups.
     const REGEX = <<<'REGEX'
 /(?J)
 ^
 (?#startline)(?<startline>
   (?#request)(?<request>
     (?#method)(?<method>OPTIONS|GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT)
-    (?:\ )+(?:(?#uri)(?<uri>[^\ |\R]+))?
+    (?:\ )+(?:(?#uri)(?<uri>[^\ |\r\n]+))?
     (?:\ )+HTTP\/(?#version)(?<version>\d.\d)
   )
   |(?#response)(?<response>
@@ -50,8 +53,8 @@ abstract class Message extends MagicObject
     (?:\ )+(?#phrase)(?<phrase>.+)
   )
 )\R
-(?:(?#headers)(?<headers>(?:(?:[^:\R]+)(?:\ )*:(?:\ )*(?:[^\R]+)\R)*(?:[^:]+)(?:\ )*:(?:\ )*(?:[^\R]+))\R
-(?:\R(?#body)(?<body>[^$]+))?)?
+(?:(?#headers)(?<headers>(?:(?:[^:\r\n]+)(?:\ )*:(?:\ )*(?:[^\r\n]+)\R)*(?:[^:\r\n]+)(?:\ )*:(?:\ )*(?:[^\r\n]+))(?:\R)?
+(?:\R\R(?#body)(?<body>[^$]+))?)?
 $
 /x
 REGEX;
@@ -124,13 +127,37 @@ REGEX;
     }
 
     /**
+     * Tests if the given string is valid (using the regex). It can additionally return the named capturing
+     * group(s) using the $matches parameter as a reference.
+     *
+     * @static
+     * @param string        $message    The http to test for validity
+     * @param array|null    $matches    The named capturing groups from the match
+     * @return bool
+     * @throws \InvalidArgumentException
+     */
+    public static function validate($message, &$matches = null)
+    {
+        if (!is_string($message)) {
+            throw new InvalidArgumentException("The \$message parameter must be a string.");
+        }
+
+        $valid = (bool)preg_match(static::REGEX, $message, $matches);
+
+        var_dump($valid, $matches); exit;
+
+        return $valid;
+    }
+
+    /**
      * Identifies the message type
      *
-     * @param string|Message $message   The message string or object to identify the type
+     * @param string|Message $message    The message string or object to identify the type
+     * @param array|null     $matches    The named capturing groups from the match
      * @return string
      * @throws \InvalidArgumentException
      */
-    public static function type($message)
+    public static function type($message, &$matches = null)
     {
         if (is_object($message) and $message instanceof Message) {
             // Test for object
@@ -165,23 +192,21 @@ REGEX;
         return static::TYPE_INVALID;
     }
 
-    /**
-     * Tests if the given string is valid (using the regex). It can additionally return the named capturing
-     * group(s) using the $matches parameter as a reference.
-     *
-     * @static
-     * @param string        $message    The http to test for validity
-     * @param array|null    $matches    The named capturing groups from the match
-     * @return bool
-     * @throws \InvalidArgumentException
-     */
-    public static function validate($message, &$matches = null)
+    public static function parse($message)
     {
-        if (!is_string($message)) {
-            throw new InvalidArgumentException("The \$message parameter must be a string.");
-        }
+        switch(static::type($message, $matches)){
+            case static::TYPE_REQUEST:
+                $message = Request::forge();
 
-        return (bool)preg_match(static::REGEX, $message, $matches);
+                break;
+            case static::TYPE_RESPONSE:
+                $message = Response::forge();
+                var_dump($matches);
+                break;
+            case static::TYPE_INVALID:
+                throw new \RuntimeException("The \$message is not a valid HTTP message.");
+                break;
+        }
     }
 
     /**
