@@ -25,6 +25,7 @@ MSG;
     public function testForgePrint()
     {
         $response = Response::forge();
+        $this->assertInstanceOf('axelitus\Acre\Net\Http\Response', $response);
         $response->headers->charset = 'utf-8';
         $response->headers->contentType = 'plain/text';
         $response->getBodyLength(true);
@@ -81,6 +82,19 @@ EXPECTED;
         $message = (string)$message;
         $output = Message::type($message);
         $expected = Message::TYPE_RESPONSE;
+        $this->assertEquals($expected, $output);
+
+        $output = $message;
+
+        // Change the newlines to the testing platform specific PHP_EOL so we can accurately
+        // test against the original headers string.
+        // The class uses \r\n as the newline default as stated in the IETF RFC2616 standard.
+        $output = str_replace("\r\n", PHP_EOL, $output);
+
+        $expected = <<<'EXPECTED'
+HTTP/1.1 200 OK
+
+EXPECTED;
         $this->assertEquals($expected, $output);
     }
 }

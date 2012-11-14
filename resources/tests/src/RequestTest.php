@@ -35,12 +35,13 @@ MSG;
      */
     public function testForgePrint()
     {
-        $response = Request::forge();
-        $response->headers->charset = 'utf-8';
-        $response->headers->contentType = 'plain/text';
-        $response->getBodyLength(false);
+        $request = Request::forge();
+        $this->assertInstanceOf('axelitus\Acre\Net\Http\Request', $request);
+        $request->headers->charset = 'utf-8';
+        $request->headers->contentType = 'plain/text';
+        $request->getBodyLength(false);
 
-        $output = (string)$response;
+        $output = (string)$request;
 
         // Change the newlines to the testing platform specific PHP_EOL so we can accurately
         // test against the original headers string.
@@ -110,6 +111,7 @@ EXPECTED;
     public function testGetMessageType()
     {
         $message = Request::forge();
+        $this->assertInstanceOf('axelitus\Acre\Net\Http\Request', $message);
         $output = Message::type($message);
         $expected = Message::TYPE_REQUEST;
         $this->assertEquals($expected, $output);
@@ -117,6 +119,19 @@ EXPECTED;
         $message = (string)$message;
         $output = Message::type($message);
         $expected = Message::TYPE_REQUEST;
+        $this->assertEquals($expected, $output);
+
+        $output = $message;
+
+        // Change the newlines to the testing platform specific PHP_EOL so we can accurately
+        // test against the original headers string.
+        // The class uses \r\n as the newline default as stated in the IETF RFC2616 standard.
+        $output = str_replace("\r\n", PHP_EOL, $output);
+
+        $expected = <<<'EXPECTED'
+GET  HTTP/1.1
+
+EXPECTED;
         $this->assertEquals($expected, $output);
     }
 }

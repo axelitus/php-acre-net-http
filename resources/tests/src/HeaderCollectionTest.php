@@ -24,7 +24,7 @@ HEADERS;
     public function testHeaderCollection()
     {
         $hc = HeaderCollection::forge();
-        $this->assertTrue($hc instanceof HeaderCollection);
+        $this->assertInstanceOf('axelitus\Acre\Net\Http\HeaderCollection', $hc);
 
         $output = count($hc);
         $expected = 0;
@@ -99,6 +99,7 @@ HEADERS;
         $this->assertEquals($expected, $output);
 
         $hc = HeaderCollection::parse($this->headers, true);
+        $this->assertInstanceOf('axelitus\Acre\Net\Http\HeaderCollection', $hc);
         $output = (string)$hc;
 
         // Change the newlines to the testing platform specific PHP_EOL so we can accurately
