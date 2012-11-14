@@ -216,7 +216,7 @@ REGEX_PAIR;
      * 'Content-Type', 'Content-MD5', etc.
      *
      * @param string    $label      The header's label name
-     * @param bool      $asStrList  Whether to return the header value as a char separated list
+     * @param bool      $asStrList  Whether to return the header value as a char separated list if multiple found
      * @return mixed    The header's value
      * @throws \OutOfBoundsException
      */
@@ -226,7 +226,7 @@ REGEX_PAIR;
             throw new OutOfBoundsException(sprintf("Header %s does not exist.", $label));
         }
 
-        $value = $header = static::flatten($this->headers[$label]);
+        $value = $header = static::flattenValue($this->headers[$label]);
         if (is_array($header) and $asStrList) {
             $value = '';
             foreach ($header as $val) {
@@ -372,7 +372,7 @@ REGEX_PAIR;
      * @param mixed $header     The header to flatten
      * @return mixed    The flattened header value
      */
-    protected static function flatten(array $header)
+    protected static function flattenValue(array $header)
     {
         return (is_array($header) and count($header) == 1) ? $header[0] : $header;
     }
