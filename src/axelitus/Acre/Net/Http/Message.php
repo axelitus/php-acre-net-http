@@ -144,8 +144,6 @@ REGEX;
 
         $valid = (bool)preg_match(static::REGEX, $message, $matches);
 
-        var_dump($valid, $matches); exit;
-
         return $valid;
     }
 
@@ -168,7 +166,7 @@ REGEX;
             }
 
             return static::TYPE_INVALID;
-        } else if (is_string($message)) {
+        } elseif (is_string($message)) {
             // Test for string
             if ($message == '') {
                 throw new InvalidArgumentException("The \$message string cannot be empty.");
@@ -192,21 +190,35 @@ REGEX;
         return static::TYPE_INVALID;
     }
 
+    /**
+     * Parses an HTTP message string into it's valid Request or Response derived classes.
+     *
+     * @param string $message   The HTTP message string to parse
+     * @return Message      The proper HTTP parsed message
+     * @throws \RuntimeException
+     */
     public static function parse($message)
     {
-        switch(static::type($message, $matches)){
+        switch (static::type($message, $matches)) {
             case static::TYPE_REQUEST:
                 $message = Request::forge();
-
+                $message->method = $matches['method'];
+                $message->uri = Uri::parse($matches['uri']);
                 break;
             case static::TYPE_RESPONSE:
                 $message = Response::forge();
-                var_dump($matches);
+                $message->status = $matches['status'];
                 break;
             case static::TYPE_INVALID:
                 throw new \RuntimeException("The \$message is not a valid HTTP message.");
                 break;
         }
+
+        $message->version = $matches['version'];
+        $message->headers = HeaderCollection::parse($matches['headers']);
+        $message->body = $matches['body'];
+
+        return $message;
     }
 
     /**
