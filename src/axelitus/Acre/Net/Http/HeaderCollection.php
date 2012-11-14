@@ -40,13 +40,13 @@ class HeaderCollection implements Countable, ArrayAccess, IteratorAggregate
     // character groups it has no special meaning so [^\R] will not match any non-newline character,
     // instead it will simply match any character which is not R.
     const REGEX_HEADERS = <<<'REGEX_HEADERS'
-/^(?:(?#headers)(?<headers>(?:(?:[^:\r\n]+)(?:\ )*:(?:\ )*(?:[^\r\n]+)\R)*(?:[^:\r\n]+)(?:\ )*:(?:\ )*(?:[^\r\n]+))(?:\R)?)?$/x
+/^(?:(?#headers)(?<headers>(?:(?:[^:\r\n]+)(?:\ )*:(?:\ )*(?:[^\r\n]+)\r?\n)*(?:[^:\r\n]+)(?:\ )*:(?:\ )*(?:[^\r\n]+))(?:\r?\n)?)?$/x
 REGEX_HEADERS;
 
     // Due to newlines being different in Linux and Windows we need to use PCRE (*ANYCRLF)
     // to match them, that is \R escaped char.
     const REGEX_PAIR = <<<'REGEX_PAIR'
-/^(?<label>[^:\R]+)(?:\ )*:(?:\ )*(?<value>[^\R]+)$/x
+/^(?<label>[^:\r\n]+)(?:\ )*:(?:\ )*(?<value>[^\r\n]+)$/x
 REGEX_PAIR;
 
     /**

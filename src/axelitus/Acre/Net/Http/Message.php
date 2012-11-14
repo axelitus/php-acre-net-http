@@ -41,7 +41,7 @@ abstract class Message extends MagicObject
     const REGEX = <<<'REGEX'
 /(?J)
 ^
-(?#startline)(?<startline>
+(?:(?#startline)(?<startline>
   (?#request)(?<request>
     (?#method)(?<method>OPTIONS|GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT)
     (?:\ )+(?:(?#uri)(?<uri>[^\ |\r\n]+))?
@@ -50,11 +50,11 @@ abstract class Message extends MagicObject
   |(?#response)(?<response>
     HTTP\/(?#version)(?<version>\d.\d)
     (?:\ )+(?#status)(?<status>\d{3})
-    (?:\ )+(?#phrase)(?<phrase>.+)
+    (?:\ )+(?#phrase)(?<phrase>[^\r\n]+)
   )
-)\R
-(?:(?#headers)(?<headers>(?:(?:[^:\r\n]+)(?:\ )*:(?:\ )*(?:[^\r\n]+)\R)*(?:[^:\r\n]+)(?:\ )*:(?:\ )*(?:[^\r\n]+))(?:\R)?
-(?:\R\R(?#body)(?<body>[^$]+))?)?
+))(?:\r?\n
+(?:(?#headers)(?<headers>(?:(?:[^:\r\n]+)(?:\ )*:(?:\ )*(?:[^\r\n]+)\r?\n)*(?:[^:\r\n]+)(?:\ )*:(?:\ )*(?:[^\r\n]+))(?:\r?\n)?
+(?:\r?\n\r?\n(?#body)(?<body>[^$]+))?)?)?
 $
 /x
 REGEX;
