@@ -21,6 +21,8 @@ MSG;
 
     /**
      * testForgePrint
+     *
+     * @test
      */
     public function testForgePrint()
     {
@@ -49,6 +51,8 @@ EXPECTED;
 
     /**
      * testValidateMessageOK
+     *
+     * @test
      */
     public function testValidateMessageOK()
     {
@@ -59,6 +63,7 @@ EXPECTED;
     /**
      * testValidateResponseOK
      *
+     * @test
      * @depends testValidateMessageOK
      */
     public function testValidateResponseOK()

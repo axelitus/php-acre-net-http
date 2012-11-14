@@ -20,6 +20,8 @@ HEADERS;
 
     /**
      * testHeaderCollection
+     *
+     * @test
      */
     public function testHeaderCollection()
     {
@@ -73,6 +75,8 @@ HEADERS;
 
     /**
      * testValidate
+     *
+     * @test
      */
     public function testValidate()
     {
@@ -83,6 +87,7 @@ HEADERS;
     /**
      * testParse
      *
+     * @test
      * @depends testValidate
      */
     public function testParse()

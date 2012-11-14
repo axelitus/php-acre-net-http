@@ -11,6 +11,8 @@ class MethodTest extends \PHPUnit_Framework_TestCase
 
     /**
      * testIsValid
+     *
+     * @test
      */
     public function testIsValid()
     {
