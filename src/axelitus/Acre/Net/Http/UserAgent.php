@@ -60,8 +60,8 @@ class UserAgent
      * @var array Contains the hooks for request/response manipulation in between processing
      */
     protected $hooks = array(
-        static::HOOK_BEFORE_REQUEST_SEND => null,
-        static::HOOK_AFTER_RESPONSE_RECEIVED => null
+        self::HOOK_BEFORE_REQUEST_SEND => null,
+        self::HOOK_AFTER_RESPONSE_RECEIVED => null
     );
 
     /**
