@@ -90,7 +90,7 @@ class UserAgent
      */
     public function send(Request $request, $transport = null)
     {
-        $this->executeHook(static::HOOK_BEFORE_REQUEST_SEND, &$request, &$transport);
+        $this->executeHook(static::HOOK_BEFORE_REQUEST_SEND, $request, $transport);
 
         $response = null;
         if ($transport === null) {
@@ -99,7 +99,7 @@ class UserAgent
             // TODO: get the wanted transport if exists, if not throw an exception then use it to send the request
         }
 
-        $this->executeHook(static::HOOK_AFTER_RESPONSE_RECEIVED, &$response, &$transport);
+        $this->executeHook(static::HOOK_AFTER_RESPONSE_RECEIVED, $response, $transport);
 
         return $response;
     }
