@@ -113,9 +113,8 @@ class UserAgent
      */
     public function executeHook($hook, Message &$message, &$transport)
     {
-        // TODO: figure out how to pass args as reference
         if (isset($this->hooks[$hook]) and is_callable($this->hooks[$hook])) {
-
+            call_user_func_array($this->hooks[$hook], array(&$message, &$transport));
         }
     }
 
