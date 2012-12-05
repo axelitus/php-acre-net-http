@@ -63,7 +63,7 @@ class Transport_cURL extends Transport
      */
     public static function isAvailable()
     {
-        if (in_array('curl', get_loaded_extensions())) {
+        if (in_array('curl', get_loaded_extensions()) or function_exists('curl_init')) {
             return true;
         }
 
@@ -81,8 +81,11 @@ class Transport_cURL extends Transport
      */
     public static function forge(UserAgent $user_agent, \ArrayAccess $cURL_options = null, $use_defaults = true)
     {
-        $default = ($use_defaults) ? static::$default_curl_options : array();
+        if (!static::isAvailable()) {
+            throw new \Exception("cURL extension is not available, cannot use this transport.");
+        }
 
+        $default = ($use_defaults) ? static::$default_curl_options : array();
         $options = Arr::forge($default);
         $options->merge((($cURL_options === null) ? array() : $cURL_options));
 
@@ -100,10 +103,6 @@ class Transport_cURL extends Transport
      */
     protected function __construct(UserAgent $user_agent, \ArrayAccess $cURL_options)
     {
-        if (!static::isAvailable()) {
-            throw new \Exception("cURL extension is not available, cannot use this transport.");
-        }
-
         $this->user_agent = $user_agent;
 
         $this->cURLInit();
@@ -173,6 +172,10 @@ class Transport_cURL extends Transport
      */
     protected function sendRequest(Request $request)
     {
+        if ($this->curl === null) {
+            throw new \RuntimeException("The cURL object hasn't been initialized. The request will not be sent.");
+        }
+
         $this->preparecURL($request);
 
         $response = curl_exec($this->curl);
