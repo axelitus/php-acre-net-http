@@ -59,6 +59,11 @@ $
 /x
 REGEX;
 
+    const REGEX_CHUNK = <<<'REGEX_CHUNK'
+/(?#size)(?<size>[0-9A-Fa-f]+)(?:\r?\n(?#content)(?<content>.*))?/xs
+REGEX_CHUNK;
+
+
     /**
      * @var Message type: request
      */
@@ -216,7 +221,30 @@ REGEX;
 
         $message->version = $matches['version'];
         $message->headers = HeaderCollection::parse($matches['headers']);
-        $message->body = $matches['body'];
+
+        // Process message body depending on headers
+        if ($message->headers->has('Transfer-Encoding')) {
+            switch ($message->headers->transferEncoding) {
+                case 'chunked':
+                    $message->body = Message::unchunk($matches['body']);
+                    break;
+                case 'compress':
+                    // TODO: handle compress transfer encoding
+                    break;
+                case 'deflate':
+                    // TODO: handle deflate transfer encoding
+                    break;
+                case 'gzip':
+                    // TODO: handle gzip transfer encoding
+                    break;
+                case 'identity':
+                    // TODO: handle identity transfer encoding
+                    break;
+            }
+        } else {
+            // TODO: check content-length header
+            $message->body = $matches['body'];
+        }
 
         return $message;
     }
@@ -332,6 +360,26 @@ REGEX;
             $message .= sprintf("\r\n%s", $this->body);
         }
 
-        return $message;
+        return $message."\r\n";
+    }
+
+    /**
+     * @param $body
+     * @return mixed
+     */
+    public static function unchunk($chunked)
+    {
+        $unchunked = preg_replace_callback(self::REGEX_CHUNK, function ($matches) {
+            $size = base_convert($matches['size'], 16, 10);
+            if ($size == 0) {
+                return '';
+            }
+
+            $chunk = Str::sub($matches['content'], 0, $size);
+
+            return $chunk.((Str::length($matches['content']) < $size + 1)? '' : Message::unchunk(Str::sub($matches['content'], $size + 1)));
+        }, $chunked);
+
+        return $unchunked;
     }
 }
