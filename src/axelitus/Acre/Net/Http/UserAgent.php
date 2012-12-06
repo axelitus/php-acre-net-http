@@ -94,6 +94,7 @@ class UserAgent
 
         $response = null;
         if ($transport === null) {
+            $request->headers->userAgent = (string)$this;
             $response = $this->default_transport->send($request);
         } else {
             // TODO: get the wanted transport if exists, if not throw an exception then use it to send the request
