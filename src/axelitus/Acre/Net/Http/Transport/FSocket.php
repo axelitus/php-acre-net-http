@@ -15,7 +15,7 @@ namespace axelitus\Acre\Net\Http;
 use axelitus\Acre\Common\Arr as Arr;
 
 /**
- * Transport_Socket Class
+ * Transport_FSocket Class
  *
  * @package     axelitus\Acre\Net\Http
  * @category    Net\Http
@@ -29,6 +29,10 @@ class Transport_FSocket extends Transport
 
     protected $options = array();
 
+    const SOCKET_TIMEOUT = 'socket_timeout';
+
+    const SOCKET_BUFFER_SIZE = 'socket_buffer_size';
+
     const BUFFER_SIZE = 1160;
 
     /**
@@ -36,7 +40,8 @@ class Transport_FSocket extends Transport
      * @var array   The default cURL options to be used
      */
     protected static $default_options = array(
-        CONNECTION_TIMEOUT => 10,
+        self::SOCKET_TIMEOUT => 10,
+        self::SOCKET_BUFFER_SIZE => 1024
     );
 
     /**
@@ -99,10 +104,11 @@ class Transport_FSocket extends Transport
      */
     protected function sendRequest(Request $request)
     {
-        // Ensure we have a timeout set and a buffersize
-        $this->options[CONNECTION_TIMEOUT] = (!isset($this->options[CONNECTION_TIMEOUT])? static::$default_options[CONNECTION_TIMEOUT] : $this->options[CONNECTION_TIMEOUT]);
+        // Ensure we have a timeout set and a buffer size
+        $this->options[self::SOCKET_TIMEOUT] = (!isset($this->options[self::SOCKET_TIMEOUT])? static::$default_options[self::SOCKET_TIMEOUT] : $this->options[self::SOCKET_TIMEOUT]);
+        $this->options[self::SOCKET_BUFFER_SIZE] = (!isset($this->options[self::SOCKET_BUFFER_SIZE]) ? static::$default_options[self::SOCKET_BUFFER_SIZE] : $this->options[self::SOCKET_BUFFER_SIZE]);
 
-        $this->socket = @fsockopen($request->uri->authority->host, $request->uri->authority->port, $errno, $errstr, $this->options[CONNECTION_TIMEOUT]);
+        $this->socket = @fsockopen($request->uri->authority->host, $request->uri->authority->port, $errno, $errstr, $this->options[self::SOCKET_TIMEOUT]);
         if ($this->socket === false or !is_resource($this->socket)) {
             throw new \RuntimeException("The socket could not be opened. The request will not be sent. Error [{$errno}]: {$errstr}.");
         }
@@ -117,7 +123,7 @@ class Transport_FSocket extends Transport
                 throw new \RuntimeException('The socket timed out.');
             }
 
-            $response .= fread($this->socket, self::BUFFER_SIZE);
+            $response .= fread($this->socket, $this->options[self::SOCKET_BUFFER_SIZE]);
         }
 
         return Response::parse($response);
