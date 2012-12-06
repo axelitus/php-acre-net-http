@@ -103,7 +103,7 @@ REGEX;
         }
 
         foreach ($options as $key => $value) {
-            $this->{$key} = $value;
+            $this->__set($key, $value);
         }
     }
 

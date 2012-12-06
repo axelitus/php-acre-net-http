@@ -96,8 +96,14 @@ class Request extends Message
      * @param \axelitus\Acre\Net\Uri\Uri $uri
      * @return Request
      */
-    protected function setUri(Uri $uri)
+    protected function setUri($uri)
     {
+        if (is_string($uri)) {
+            $uri = Uri::forge($uri);
+        } else if (!is_object($uri) and $uri instanceof Uri) {
+            throw new \InvalidArgumentException("The uri must be a string or an instance of Uri.");
+        }
+
         $this->uri = $uri;
 
         return $this;
@@ -120,7 +126,8 @@ class Request extends Message
      */
     protected function startLine()
     {
-        $startLine = sprintf("%s %s HTTP/%s\r\n", $this->method, $this->uri, $this->version);
+        $startLine = sprintf("%s %s HTTP/%s\r\n", $this->method, ((count($this->uri->path) == 0) ? "/" : $this->uri->path), $this->version);
+        $startLine .= sprintf("Host: %s\r\n", $this->uri->authority->host);
 
         return $startLine;
     }
