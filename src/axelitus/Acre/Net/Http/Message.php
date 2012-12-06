@@ -364,20 +364,28 @@ REGEX_CHUNK;
     }
 
     /**
-     * @param $body
-     * @return mixed
+     * Processes a chunked string as defined in RFC2616. Slighlty based upon kexianbin@diyism.com in the
+     * PHP documentation comments for fsockopen ({@link http://php.net/manual/en/function.fsockopen.php#107020}).
+     *
+     * @see     http://tools.ietf.org/html/rfc2616#section-3.6.1        IETF RFC2616 Hypertext Transfer Protocol -- 3.6.1 Chunked Transfer Coding
+     * @see     http://php.net/manual/en/function.fsockopen.php#107020
+     * @param   string  $chunked    The chunked string in the format specified by the RFC2616
+     * @return string   The unchunked string
      */
     public static function unchunk($chunked)
     {
+        if (!is_string($chunked)) {
+            throw new \InvalidArgumentException("The \$chunked param must be a string.");
+        }
+
         $unchunked = preg_replace_callback(self::REGEX_CHUNK, function ($matches) {
-            $size = base_convert($matches['size'], 16, 10);
-            if ($size == 0) {
+            if (($size = base_convert($matches['size'], 16, 10)) == 0) {
                 return '';
             }
 
             $chunk = Str::sub($matches['content'], 0, $size);
 
-            return $chunk.((Str::length($matches['content']) < $size + 1)? '' : Message::unchunk(Str::sub($matches['content'], $size + 1)));
+            return $chunk.((Str::length($matches['content']) < $size + 1) ? '' : Message::unchunk(Str::sub($matches['content'], $size + 1)));
         }, $chunked);
 
         return $unchunked;
