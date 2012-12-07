@@ -24,11 +24,6 @@ use axelitus\Acre\Common\Arr as Arr;
 class Transport_cURL extends Transport
 {
     /**
-     * @var UserAgent|null      The UserAgent object that's communicating
-     */
-    protected $user_agent = null;
-
-    /**
      * @var null|resource   The cURL instance
      */
     protected $curl = null;
@@ -50,7 +45,6 @@ class Transport_cURL extends Transport
     protected static $default_curl_options = array(
         CURLOPT_TIMEOUT => 10,
         CURLOPT_CONNECTTIMEOUT => 10,
-        CURLOPT_RETURNTRANSFER => true,
         CURLOPT_SSL_VERIFYHOST => false,
         CURLOPT_SSL_VERIFYPEER => false
     );
@@ -71,25 +65,20 @@ class Transport_cURL extends Transport
     }
 
     /**
-     * Forges a new cURL Transport
+     * Creates a new cURL Transport
      *
      * @static
-     * @param UserAgent    $user_agent      The user agent
-     * @param \ArrayAccess $cURL_options    The cURL options to use/merge
+     * @param \ArrayAccess $options         The cURL options to use/merge
      * @param bool         $use_defaults    Whether to use the default cURL options as base
      * @return Transport_cURL   The new cURL Transport object
      */
-    public static function forge(UserAgent $user_agent, \ArrayAccess $cURL_options = null, $use_defaults = true)
+    protected static function create(\ArrayAccess $options = null, $use_defaults = true)
     {
-        if (!static::isAvailable()) {
-            throw new \Exception("cURL extension is not available, cannot use this transport.");
-        }
-
         $default = ($use_defaults) ? static::$default_curl_options : array();
         $options = Arr::forge($default);
-        $options->merge((($cURL_options === null) ? array() : $cURL_options));
+        $options->merge((($options === null) ? array() : $options->getArray()));
 
-        $transport = new static($user_agent, $options);
+        $transport = new static($options);
 
         return $transport;
     }
@@ -97,16 +86,13 @@ class Transport_cURL extends Transport
     /**
      * Creates a new instance of cURL Transport class.
      *
-     * @param UserAgent    $user_agent      The user agent
      * @param \ArrayAccess $cURL_options    The cURL options
      * @throws \Exception
      */
-    protected function __construct(UserAgent $user_agent, \ArrayAccess $cURL_options)
+    protected function __construct(\ArrayAccess $options)
     {
-        $this->user_agent = $user_agent;
-
         $this->cURLInit();
-        $this->cURLSetOptions($cURL_options);
+        $this->cURLSetOptions($options);
     }
 
     /**
@@ -194,10 +180,12 @@ class Transport_cURL extends Transport
                 throw new \RuntimeException("A cURL error occurred ({$curl_err}): \"".curl_error($this->curl)."\".");
             }
         }
+        curl_close($this->curl);
+
+        // Get rid of the Transfer-Encoding: chunked header as cURL handles chunks already
+        $response = preg_replace('/Transfer-Encoding:(?: )+chunked\r?\n/i', '', $response);
 
         $response = Response::parse($response);
-
-        curl_close($this->curl);
 
         return $response;
     }
@@ -242,5 +230,8 @@ class Transport_cURL extends Transport
 
         // Forces to receive the complete HTTP message
         $this->cURLSetOption(CURLOPT_HEADER, true);
+
+        // Forces to get the result as a string
+        $this->cURLSetOption(CURLOPT_RETURNTRANSFER, true);
     }
 }

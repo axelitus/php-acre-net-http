@@ -22,9 +22,77 @@ namespace axelitus\Acre\Net\Http;
 abstract class Transport
 {
     /**
+     * @var UserAgent|null      The UserAgent object that's communicating
+     */
+    protected $user_agent = null;
+
+    /**
+     * Forges a new Transport object.
+     *
+     * @static
+     * @param UserAgent    $user_agent      The user agent
+     * @param \ArrayAccess $options         The transport options
+     * @param bool         $use_defaults    Whether to use the default options as base or ignore them
+     * @return Transport    The newly forged Transport
+     * @throws  \RuntimeException
+     */
+    public static function forge(UserAgent $user_agent, \ArrayAccess $options = null, $use_defaults = true)
+    {
+        if (!static::isAvailable()) {
+            throw new \RuntimeException("This transport {".get_called_class()."} is not available.");
+        }
+
+        $transport = static::create($options, $use_defaults);
+
+        // Attach the user agent to the transport
+        $transport->setUserAgent($user_agent);
+
+        return $transport;
+    }
+
+    /**
+     * Verifies if the transport is available.
+     * This function cannot be declared abstract, thus here it returns false every time so you have to override
+     * it in the derived class.
+     *
+     * @static
+     * @return bool     Whether the transport is available
+     */
+    public static function isAvailable() {
+        return false;
+    }
+
+    /**
+     * Creates the actual transport (this function is called from within the forge function).
+     * This function cannot be declared abstract, thus here it returns null every time so you have to override
+     * it in the derived class.
+     *
+     * @static
+     * @param \ArrayAccess $options             The options to use for the transport
+     * @param bool         $use_defaults        Whether to use the default options as a base or ignore them
+     * @return Transport    The created transport
+     */
+    protected static function create(\ArrayAccess $options = null, $use_defaults = true)
+    {
+        return null;
+    }
+
+    /**
+     * Attaches a User Agent to the transport.
+     *
+     * @final
+     * @param UserAgent $user_agent
+     */
+    final protected function setUserAgent(UserAgent $user_agent)
+    {
+        $this->user_agent = $user_agent;
+    }
+
+    /**
      * Base class for Transports which handle the sending of HTTP Requests.
      * This ensures that the response is a Response object.
      *
+     * @final
      * @param Request $request      The request to be sent
      * @return Response     The response of the sent request
      * @throws \RuntimeException
