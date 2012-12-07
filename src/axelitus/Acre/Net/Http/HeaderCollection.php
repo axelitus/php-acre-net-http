@@ -165,7 +165,7 @@ REGEX_PAIR;
     }
 
     /**
-     * Magic getter to get headers like echo $headers->contentType;
+     * Magic getter to get headers like $headers->contentType;
      * The header labels must be given camelCased and they will get separated by a dash '-'.
      * Examples:
      * 'contentType' will become 'Content-Type'
@@ -243,13 +243,16 @@ REGEX_PAIR;
      *
      * @param string    $label      The header label name
      * @param null|int  $index      The sub-entry for multi-entry headers
+     * @return  bool    Whether the array changed or not
      * @throws \OutOfBoundsException
      */
     public function remove($label, $index = null)
     {
         if ($this->has($label)) {
-            if ($index === null or count($this->headers[$label]) == 0) {
+            if ($index === null or count($this->headers[$label]) <= 1) {
                 unset($this->headers[$label]);
+
+                return true;
             } else {
                 if (!$this->hasEntry($label, $index)) {
                     throw new OutOfBoundsException("The \$index value {$index} for header {$label} does not exists.");
@@ -259,7 +262,29 @@ REGEX_PAIR;
 
                 // Re-index header entries array
                 $this->headers[$label] = array_values($this->headers[$label]);
+
+                return true;
             }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $label
+     * @param $value
+     */
+    public function removeWhereValue($label, $value)
+    {
+        for ($i = 0; $this->has($label) and ($i < count($this->headers[$label])); $i++) {
+            if ($this->headers[$label][$i] == $value) {
+                // Because the remove function re-indexes the label array
+                // we need to step backwards to process the "next" value
+                if ($this->remove($label, $i)) {
+                    $i--;
+                }
+            }
+
         }
     }
 
@@ -384,7 +409,7 @@ REGEX_PAIR;
      */
     public function isEmpty()
     {
-        if(count($this) == 0){
+        if (count($this) == 0) {
             return true;
         }
 
