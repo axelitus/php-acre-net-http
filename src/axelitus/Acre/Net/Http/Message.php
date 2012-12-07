@@ -227,6 +227,7 @@ REGEX_CHUNK;
             switch ($message->headers->transferEncoding) {
                 case 'chunked':
                     $message->body = Message::unchunk($matches['body']);
+                    $message->headers->removeWhereValue('Transfer-Encoding', 'chunked');
                     break;
                 case 'compress':
                     // TODO: handle compress transfer encoding
@@ -383,9 +384,9 @@ REGEX_CHUNK;
                 return '';
             }
 
-            $chunk = Str::sub($matches['content'], 0, $size);
+            $chunk = Str::sub($matches['content'], 0, $size, 'us-ascii');
 
-            return $chunk.((Str::length($matches['content']) < $size + 1) ? '' : Message::unchunk(Str::sub($matches['content'], $size + 1)));
+            return $chunk.((Str::length($matches['content'], 'us-ascii') < $size + 1) ? '' : Message::unchunk(Str::sub($matches['content'], $size + 1, null, 'us-ascii')));
         }, $chunked);
 
         return $unchunked;
