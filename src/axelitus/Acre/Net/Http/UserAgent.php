@@ -34,7 +34,7 @@ class UserAgent
     /**
      * @var string  The user agent name
      */
-    protected $name = 'Acre';
+    protected $name = 'Acre User Agent';
 
     /**
      * @var string  The user agent version
