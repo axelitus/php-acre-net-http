@@ -21,82 +21,55 @@ use axelitus\Acre\Common\Arr as Arr;
  * @category    Net\Http
  * @author      Axel Pardemann (dev@axelitus.mx)
  */
-class Transport_FSocket extends Transport
+class Transport_Socket_Simple extends Transport_Socket
 {
-    protected $socket = null;
-
-    protected $user_agent = null;
-
-    protected $options = array();
-
-    const SOCKET_TIMEOUT = 'socket_timeout';
-
-    const SOCKET_BUFFER_SIZE = 'socket_buffer_size';
-
-    const BUFFER_SIZE = 1160;
-
     /**
-     * @static
-     * @var array   The default cURL options to be used
-     */
-    protected static $default_options = array(
-        self::SOCKET_TIMEOUT => 10,
-        self::SOCKET_BUFFER_SIZE => 1024
-    );
-
-    /**
-     * Verifies if sockets are available
+     * Verifies if sockets are available through fsockopen
      *
      * @static
      * @return bool     Whether cURL is available
      */
     public static function isAvailable()
-        {
-            if (function_exists('fsockopen')) {
-                return true;
-            }
-
-            return false;
+    {
+        if (function_exists('fsockopen')) {
+            return true;
         }
+
+        return false;
+    }
 
     /**
-     * Forges a new Socket Transport
+     * Creates a new Simple Socket Transport
      *
      * @static
-     * @param UserAgent    $user_agent      The user agent
-     * @param \ArrayAccess $options         The cURL options to use/merge
+     * @param \ArrayAccess $options         The socket options to use/merge
      * @param bool         $use_defaults    Whether to use the default options as base
-     * @return Transport_cURL   The new Socket Transport object
+     * @return Transport_Socket_Simple   The new Simple Socket Transport object
      */
-    public static function forge(UserAgent $user_agent, \ArrayAccess $socket_options = null, $use_defaults = true)
+    public static function create(\ArrayAccess $socket_options = null, $use_defaults = true)
     {
-        if (!static::isAvailable()) {
-            throw new \Exception("Sockets are disabled, cannot use this transport.");
-        }
-
         $default = ($use_defaults) ? static::$default_options : array();
         $options = Arr::forge($default);
         $options->merge((($socket_options === null) ? array() : $socket_options));
 
-        $transport = new static($user_agent, $options);
+        $transport = new static($options);
 
         return $transport;
     }
 
     /**
-     * Creates a new instance of Socket Transport class.
+     * Creates a new instance of Simple Socket Transport class.
      *
      * @param UserAgent    $user_agent      The user agent
-     * @param \ArrayAccess $cURL_options    The cURL options
+     * @param \ArrayAccess $cURL_options    The socket options
      * @throws \Exception
      */
-    protected function __construct(UserAgent $user_agent, \ArrayAccess $options)
+    protected function __construct(\ArrayAccess $options)
     {
-        $this->user_agent = $user_agent;
     }
 
     /**
-     * Sends a Request using sockets as transport
+     * Sends a Request using sockets as transport through fsockopen
      *
      * @param Request $request      The request to be sent
      * @return Response             The received response
@@ -105,7 +78,7 @@ class Transport_FSocket extends Transport
     protected function sendRequest(Request $request)
     {
         // Ensure we have a timeout set and a buffer size
-        $this->options[self::SOCKET_TIMEOUT] = (!isset($this->options[self::SOCKET_TIMEOUT])? static::$default_options[self::SOCKET_TIMEOUT] : $this->options[self::SOCKET_TIMEOUT]);
+        $this->options[self::SOCKET_TIMEOUT] = (!isset($this->options[self::SOCKET_TIMEOUT]) ? static::$default_options[self::SOCKET_TIMEOUT] : $this->options[self::SOCKET_TIMEOUT]);
         $this->options[self::SOCKET_BUFFER_SIZE] = (!isset($this->options[self::SOCKET_BUFFER_SIZE]) ? static::$default_options[self::SOCKET_BUFFER_SIZE] : $this->options[self::SOCKET_BUFFER_SIZE]);
 
         $this->socket = @fsockopen($request->uri->authority->host, $request->uri->authority->port, $errno, $errstr, $this->options[self::SOCKET_TIMEOUT]);
@@ -126,6 +99,8 @@ class Transport_FSocket extends Transport
             $response .= fread($this->socket, $this->options[self::SOCKET_BUFFER_SIZE]);
         }
 
-        return Response::parse($response);
+        $response = Response::parse($response);
+
+        return $response;
     }
 }
