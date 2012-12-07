@@ -87,7 +87,7 @@ class Transport_Socket_Simple extends Transport_Socket
         }
 
         $write = (string)$request;
-        fwrite($this->socket, $write);
+        fwrite($this->socket, $write."\r\n");
 
         $response = '';
         while (!feof($this->socket)) {
