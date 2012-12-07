@@ -358,10 +358,10 @@ REGEX_CHUNK;
         }
 
         if ($this->body != '') {
-            $message .= sprintf("\r\n%s", $this->body);
+            $message .= sprintf("\r\n%s\r\n", $this->body);
         }
 
-        return $message."\r\n";
+        return $message;
     }
 
     /**

@@ -40,6 +40,20 @@ class Request extends Message
     protected $uri = null;
 
     /**
+     * Custom Request message constructor to ensure the uri is an object
+     *
+     * @param array $options    An array containing the initial request message options
+     */
+    protected function __construct(array $options)
+    {
+        parent::__construct($options);
+
+        if ($this->uri === null) {
+            $this->setUri(Uri::forge());
+        }
+    }
+
+    /**
      * Tests if the given string is valid (using the regex). It can additionally return the named capturing
      * group(s) using the $matches parameter as a reference.
      *
@@ -126,8 +140,12 @@ class Request extends Message
      */
     protected function startLine()
     {
-        $startLine = sprintf("%s %s HTTP/%s\r\n", $this->method, ((count($this->uri->path) == 0) ? "/" : $this->uri->path), $this->version);
-        $startLine .= sprintf("Host: %s\r\n", $this->uri->authority->host);
+        if ($this->uri->authority->host == '') {
+            $startLine = sprintf("%s %s HTTP/%s\r\n", $this->method, $this->uri, $this->version);
+        } else {
+            $startLine = sprintf("%s %s HTTP/%s\r\n", $this->method, ((count($this->uri->path) == 0) ? "/" : $this->uri->path), $this->version);
+            $startLine .= sprintf("Host: %s\r\n", $this->uri->authority->host);
+        }
 
         return $startLine;
     }
