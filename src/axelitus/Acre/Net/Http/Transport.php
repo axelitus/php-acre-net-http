@@ -83,7 +83,7 @@ abstract class Transport
      * @final
      * @param UserAgent $user_agent
      */
-    final protected function setUserAgent(UserAgent $user_agent)
+    final public function setUserAgent(UserAgent $user_agent)
     {
         $this->user_agent = $user_agent;
     }
