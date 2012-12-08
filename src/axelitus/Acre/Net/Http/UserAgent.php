@@ -185,11 +185,17 @@ class UserAgent
 
         $response = null;
         if ($transport === null) {
-            $request->headers->userAgent = (string)$this;
-            $response = $this->default_transport->send($request);
+            if ($this->default_transport === null) {
+                throw new \RuntimeException("No transport has been loaded.");
+            }
+
+            $transport = $this->default_transport;
         } else {
-            // TODO: get the wanted transport if exists, if not throw an exception then use it to send the request
+            $transport = $this->getTransport($transport);
         }
+
+        $request->headers->userAgent = (string)$this;
+        $response = $transport->send($request);
 
         $this->executeHook(static::HOOK_AFTER_RESPONSE_RECEIVED, $response, $transport);
 
