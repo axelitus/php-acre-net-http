@@ -243,7 +243,12 @@ REGEX_CHUNK;
                     break;
             }
         } else {
-            // TODO: check content-length header
+            if ($message->headers->has('Content-Length')) {
+                if ($message->headers->contentLength != Str::length($matches['body'], 'us-ascii')) {
+                    throw new \RuntimeException("The body length does not match the Content-Length header value.");
+                }
+            }
+
             $message->body = $matches['body'];
         }
 
