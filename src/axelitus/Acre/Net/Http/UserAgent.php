@@ -203,7 +203,7 @@ class UserAgent
      * @param Message   $message    The message specific for that hook (request or response)
      * @param string    $transport  The transport to be used or has been used
      */
-    public function executeHook($hook, Message &$message, &$transport)
+    protected function executeHook($hook, Message &$message, &$transport)
     {
         if (isset($this->hooks[$hook]) and is_callable($this->hooks[$hook])) {
             call_user_func_array($this->hooks[$hook], array(&$message, &$transport));
