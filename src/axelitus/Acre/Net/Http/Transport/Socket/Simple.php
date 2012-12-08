@@ -15,7 +15,7 @@ namespace axelitus\Acre\Net\Http;
 use axelitus\Acre\Common\Arr as Arr;
 
 /**
- * Transport_FSocket Class
+ * Transport_Socket_Simple Class
  *
  * @package     axelitus\Acre\Net\Http
  * @category    Net\Http
@@ -61,18 +61,19 @@ class Transport_Socket_Simple extends Transport_Socket
      * Creates a new instance of Simple Socket Transport class.
      *
      * @param UserAgent    $user_agent      The user agent
-     * @param \ArrayAccess $cURL_options    The socket options
+     * @param \ArrayAccess $options         The socket options
      * @throws \Exception
      */
     protected function __construct(\ArrayAccess $options)
     {
+        $this->options = $options;
     }
 
     /**
      * Sends a Request using sockets as transport through fsockopen
      *
      * @param Request $request      The request to be sent
-     * @return Response             The received response
+     * @return Response     The received response
      * @throws \RuntimeException
      */
     protected function sendRequest(Request $request)

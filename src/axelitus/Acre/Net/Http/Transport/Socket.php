@@ -33,7 +33,7 @@ abstract class Transport_Socket extends Transport
 
     /**
      * @static
-     * @var array   The default cURL options to be used
+     * @var array   The default Socket options to be used
      */
     protected static $default_options = array(
         self::SOCKET_TIMEOUT => 10,
